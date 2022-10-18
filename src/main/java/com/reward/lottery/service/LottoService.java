@@ -35,6 +35,9 @@ public class LottoService {
         Lotto lotto = lottoDao.selectOneByExample(example);
         if (lotto == null){
             lottoDao.insert(lastLotto);//根据期号查询本地数据库，没有该条记录时进行插入
+        }else {
+            lastLotto.setPkId(lotto.getPkId());
+            lottoDao.updateByPrimaryKey(lastLotto);
         }
     }
 

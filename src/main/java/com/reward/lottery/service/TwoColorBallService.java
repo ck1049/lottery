@@ -28,12 +28,14 @@ public class TwoColorBallService {
     }
 
     public void saveLast() {
-        TwoColorBall twoColorBall = getLastTwoColorBall();
+        TwoColorBall lastTwoColorBall = getLastTwoColorBall();
         Example example = new Example(Lotto.class);
-        example.createCriteria().andEqualTo("issueNumber", twoColorBall.getIssueNumber());
-        TwoColorBall twoColorBall1 = twoColorBallDao.selectOneByExample(example);
-        if (twoColorBall1 == null){
-            twoColorBallDao.insert(twoColorBall);//根据期号查询本地数据库，没有该条记录时进行插入
+        example.createCriteria().andEqualTo("issueNumber", lastTwoColorBall.getIssueNumber());
+        TwoColorBall twoColorBall = twoColorBallDao.selectOneByExample(example);
+        if (twoColorBall == null){
+            twoColorBallDao.insert(lastTwoColorBall);//根据期号查询本地数据库，没有该条记录时进行插入
+        }else {
+            lastTwoColorBall.setPkId(twoColorBall.getPkId());
         }
     }
 
