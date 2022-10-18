@@ -4,3 +4,4 @@
 /.idea/
 /log.log
 /logName_IS_UNDEFINED
+/src/main/resources/application-prod.properties
