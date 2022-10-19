@@ -13,8 +13,8 @@ public class TwoColorBallController {
     @Autowired
     private TwoColorBallService twoColorBallService;
 
-    @RequestMapping("/save")
-    @ResponseBody
+    //@RequestMapping("/save")
+    //@ResponseBody
     public String saveTwoColorBallStatistics(){
         twoColorBallService.save();
         return "保存成功！";

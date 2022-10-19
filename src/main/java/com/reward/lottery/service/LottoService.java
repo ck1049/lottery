@@ -27,7 +27,6 @@ public class LottoService {
         }
     }
 
-    @Scheduled(cron = "0 0 1,3,5")
     public void saveLast() {
         Lotto lastLotto = getLastlotto();
         Example example = new Example(Lotto.class);
