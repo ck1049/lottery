@@ -17,7 +17,7 @@ public class DayTask {
     @Autowired
     private TwoColorBallService twoColorBallService;
 
-    @Scheduled(cron = "0 0 20,21,22,23,0,1,3,5")
+    @Scheduled(cron = "0 0 0,1,3,5,20,21,22,23 * * ?")
     void dayTask(){
         lottoService.save();
         log.info("乐透开奖信息保存任务执行完成！");
