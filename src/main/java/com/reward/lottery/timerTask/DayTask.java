@@ -4,11 +4,13 @@ import com.reward.lottery.service.LottoService;
 import com.reward.lottery.service.TwoColorBallService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-@Component
 @Slf4j
+@Component
+@EnableScheduling
 public class DayTask {
 
     @Autowired
