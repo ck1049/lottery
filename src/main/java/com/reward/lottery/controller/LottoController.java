@@ -21,8 +21,8 @@ public class LottoController {
     @Autowired
     private LottoService lottoService;
 
-    //@RequestMapping("save")
-    //@ResponseBody
+    @RequestMapping("saveLottoStatistics")
+    @ResponseBody
     public String saveLottoStatistics(){
         lottoService.save();
         return "保存成功！";
