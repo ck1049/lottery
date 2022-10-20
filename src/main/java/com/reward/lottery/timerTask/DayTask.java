@@ -21,9 +21,9 @@ public class DayTask {
 
     @Scheduled(cron = "0 0 0,1,3,5,20,21,22,23 * * ?")
     void dayTask(){
-        lottoService.save();
+        lottoService.saveLast();
         log.info("乐透开奖信息保存任务执行完成！");
-        twoColorBallService.save();
+        twoColorBallService.saveLast();
         log.info("双色球开奖信息保存任务执行完成！");
     }
 }
