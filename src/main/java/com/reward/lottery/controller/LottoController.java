@@ -8,10 +8,8 @@ import com.reward.lottery.utils.LotteryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Controller
@@ -80,4 +78,21 @@ public class LottoController {
         return lottoService.queryByAwardDate(date);
     }
 
+    @GetMapping(value = {"costCalculationByNumber/{redBalls}/{blueBalls}/{additionalMultiple}","costCalculationByNumber/{redBalls}/{blueBalls}"})
+    @ResponseBody
+    public Long costCalculationByNumber(
+            @PathVariable("redBalls") String redBalls,
+            @PathVariable("blueBalls") String blueBalls,
+            @PathVariable(value = "additionalMultiple", required = false) Integer additionalMultiple
+            ) {
+        return lottoService.costCalculationByNumber(redBalls, blueBalls, additionalMultiple == null ? 0 : additionalMultiple);
+    }
+
+    @GetMapping(value = {"costCalculationByMultipleType/{multipleType}/{additionalMultiple}", "costCalculationByMultipleType/{multipleType}"})
+    @ResponseBody
+    public Long costCalculationByMultipleType(
+            @PathVariable("multipleType") String multipleType,
+            @PathVariable(value = "additionalMultiple", required = false) Integer additionalMultiple) {
+        return lottoService.costCalculationByMultipleType(multipleType, additionalMultiple == null ? 0 : additionalMultiple);
+    }
 }

@@ -1,14 +1,18 @@
 package com.reward.lottery.service;
 
 import com.github.pagehelper.PageHelper;
+import com.reward.lottery.common.enumeration.LotteryType;
 import com.reward.lottery.domain.Lotto;
 import com.reward.lottery.domain.LotteryResVo;
 import com.reward.lottery.mapper.LottoDao;
 import com.reward.lottery.utils.DateUtils;
+import com.reward.lottery.utils.LotteryCombinationsUtils;
 import com.reward.lottery.utils.LotteryStatisticsUtils;
 import com.reward.lottery.utils.LotteryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import tk.mybatis.mapper.entity.Example;
 import java.util.List;
 
@@ -73,5 +77,54 @@ public class LottoService {
         Example example = new Example(Lotto.class);
         example.createCriteria().andEqualTo("awardDate", DateUtils.formatDateToString(date));
         return lottoDao.selectOneByExample(example);
+    }
+
+    /**
+     * 根据给出的大乐透号码计算成本
+     * @param redBalls 红球
+     * @param blueBalls 蓝球
+     * @param additionalMultiple 追加倍数
+     * @return
+     */
+    public Long costCalculationByNumber(String redBalls, String blueBalls, Integer additionalMultiple) {
+        return (2 + additionalMultiple) * getCombinationsByNumber(redBalls, blueBalls);
+    }
+
+    /**
+     * 根据给出的大乐透号码计算成本
+     * @param multipleType 复式类型 例：6,3 或 6，3 或 6+3
+     * @param additionalMultiple 追加倍数
+     * @return
+     */
+    public Long costCalculationByMultipleType(String multipleType, Integer additionalMultiple) {
+        return (2 + additionalMultiple) * getCombinationsByMultipleType(multipleType);
+    }
+
+    /**
+     * 根据给出的大乐透号码计算组合数
+     * @param redBalls 红球
+     * @param blueBalls 蓝球
+     * @return
+     */
+    public Long getCombinationsByNumber(String redBalls, String blueBalls) {
+        String[] readBallArray = redBalls.split("[,，\\s]");
+        String[] blueBallArray = blueBalls.split("[,，\\s]");
+        if (readBallArray.length < 5 || readBallArray.length > 35 || blueBallArray.length < 2 || blueBallArray.length > 12) {
+            return 0L;
+        }
+        return LotteryCombinationsUtils.getCombinations(LotteryType.LOTTO.getType(), readBallArray.length, blueBallArray.length).longValue();
+    }
+
+    /**
+     * 根据复式类型计算组合数
+     * @param multipleType 复式类型 例：6,3 或 6，3 或 6+3
+     * @return
+     */
+    public Long getCombinationsByMultipleType(String multipleType) {
+        String[] types = multipleType.split("[\\+,，]");
+        if (types.length != 2) {
+            return 0L;
+        }
+        return LotteryCombinationsUtils.getCombinations(LotteryType.LOTTO.getType(), Integer.parseInt(types[0]), Integer.parseInt(types[1])).longValue();
     }
 }
