@@ -129,50 +129,50 @@
     <div>
         <ul class="pagination" th:if="${pageInfo.pageNum<=3}">
             <li>
-                <a th:href="@{/lotto/index/1}" aria-label="Previous">首页</a>
+                <a th:href="@{/lotto/index/1.html}" aria-label="Previous">首页</a>
             </li>
-            <li th:if="${pageInfo.pageNum>1}"><a th:href="@{'/lotto/index/'+${pageInfo.pageNum-1}}">上一页</a></li>
+            <li th:if="${pageInfo.pageNum>1}"><a th:href="@{'/lotto/index/'+${pageInfo.pageNum-1}+'.html'}">上一页</a></li>
             <li th:if="${pageInfo.pageNum==1}"><a th:href="@{/lotto/index/1}">上一页</a></li>
-            <li><a th:href="@{/lotto/index/1}">1</a></li>
-            <li><a th:href="@{/lotto/index/2}">2</a></li>
-            <li><a th:href="@{/lotto/index/3}">3</a></li>
-            <li><a th:href="@{/lotto/index/4}">4</a></li>
-            <li><a th:href="@{/lotto/index/5}">5</a></li>
-            <li th:if="${pageInfo.pageNum<pageInfo.pages}"><a th:href="@{'/lotto/index/'+${pageInfo.pageNum+1}}">下一页</a></li>
-            <li th:if="${pageInfo.pageNum==pageInfo.pages}"><a th:href="@{'/lotto/index/'+${pageInfo.pages}}">下一页</a></li>
+            <li><a th:href="@{/lotto/index/1.html}">1</a></li>
+            <li><a th:href="@{/lotto/index/2.html}">2</a></li>
+            <li><a th:href="@{/lotto/index/3.html}">3</a></li>
+            <li><a th:href="@{/lotto/index/4.html}">4</a></li>
+            <li><a th:href="@{/lotto/index/5.html}">5</a></li>
+            <li th:if="${pageInfo.pageNum<pageInfo.pages}"><a th:href="@{'/lotto/index/'+${pageInfo.pageNum+1}+'.html'}">下一页</a></li>
+            <li th:if="${pageInfo.pageNum==pageInfo.pages}"><a th:href="@{'/lotto/index/'+${pageInfo.pages}+'.html'}">下一页</a></li>
             <li>
-                <a th:href="@{'/lotto/index/'+${pageInfo.pages}}">尾页</a>
+                <a th:href="@{'/lotto/index/'+${pageInfo.pages}+'.html'}">尾页</a>
             </li>
         </ul>
         <ul class="pagination" th:if="${pageInfo.pageNum>3 && pageInfo.pageNum<=pageInfo.pages-2}">
             <li>
-                <a th:href="@{/lotto/index/1}" aria-label="Previous">首页</a>
+                <a th:href="@{/lotto/index/1.html}" aria-label="Previous">首页</a>
             </li>
-            <li><a th:href="@{'/lotto/index/'+${pageInfo.pageNum-1}}">上一页</a></li>
-            <li><a th:href="@{'/lotto/index/'+${pageInfo.pageNum-2}}" th:text="${pageInfo.pageNum-2}">1</a></li>
-            <li><a th:href="@{'/lotto/index/'+${pageInfo.pageNum-1}}" th:text="${pageInfo.pageNum-1}">2</a></li>
-            <li><a th:href="@{'/lotto/index/'+${pageInfo.pageNum}}" th:text="${pageInfo.pageNum}">3</a></li>
-            <li><a th:href="@{'/lotto/index/'+${pageInfo.pageNum+1}}" th:text="${pageInfo.pageNum+1}">4</a></li>
-            <li><a th:href="@{'/lotto/index/'+${pageInfo.pageNum+2}}" th:text="${pageInfo.pageNum+2}">5</a></li>
-            <li><a th:href="@{'/lotto/index/'+${pageInfo.pageNum+1}}">下一页</a></li>
+            <li><a th:href="@{'/lotto/index/'+${pageInfo.pageNum-1}+'.html'}">上一页</a></li>
+            <li><a th:href="@{'/lotto/index/'+${pageInfo.pageNum-2}+'.html'}" th:text="${pageInfo.pageNum-2}">1</a></li>
+            <li><a th:href="@{'/lotto/index/'+${pageInfo.pageNum-1}+'.html'}" th:text="${pageInfo.pageNum-1}">2</a></li>
+            <li><a th:href="@{'/lotto/index/'+${pageInfo.pageNum}+'.html'}" th:text="${pageInfo.pageNum}">3</a></li>
+            <li><a th:href="@{'/lotto/index/'+${pageInfo.pageNum+1}+'.html'}" th:text="${pageInfo.pageNum+1}">4</a></li>
+            <li><a th:href="@{'/lotto/index/'+${pageInfo.pageNum+2}+'.html'}" th:text="${pageInfo.pageNum+2}">5</a></li>
+            <li><a th:href="@{'/lotto/index/'+${pageInfo.pageNum+1}+'.html'}">下一页</a></li>
             <li>
-                <a th:href="@{'/lotto/index/'+${pageInfo.pages}}">尾页</a>
+                <a th:href="@{'/lotto/index/'+${pageInfo.pages}+'.html'}">尾页</a>
             </li>
         </ul>
         <ul class="pagination" th:if="${pageInfo.pageNum>pageInfo.pages-2}">
             <li>
-                <a th:href="@{/lotto/index/1}" aria-label="Previous">首页</a>
+                <a th:href="@{/lotto/index/1.html}" aria-label="Previous">首页</a>
             </li>
-            <li><a th:href="@{'/lotto/index/'+${pageInfo.pageNum-1}}">上一页</a></li>
-            <li><a th:href="@{'/lotto/index/'+${pageInfo.pages-4}}" th:text="${pageInfo.pages-4}">1</a></li>
-            <li><a th:href="@{'/lotto/index/'+${pageInfo.pages-3}}" th:text="${pageInfo.pages-3}">2</a></li>
-            <li><a th:href="@{'/lotto/index/'+${pageInfo.pages-2}}" th:text="${pageInfo.pages-2}">3</a></li>
-            <li><a th:href="@{'/lotto/index/'+${pageInfo.pages-1}}" th:text="${pageInfo.pages-1}">4</a></li>
-            <li><a th:href="@{'/lotto/index/'+${pageInfo.pages}}" th:text="${pageInfo.pages}">5</a></li>
-            <li th:if="${pageInfo.pageNum<pageInfo.pages}"><a th:href="@{'/lotto/index/'+${pageInfo.pageNum+1}}">下一页</a></li>
-            <li th:if="${pageInfo.pageNum==pageInfo.pages}"><a th:href="@{'/lotto/index/'+${pageInfo.pages}}">下一页</a></li>
+            <li><a th:href="@{'/lotto/index/'+${pageInfo.pageNum-1}+'.html'}">上一页</a></li>
+            <li><a th:href="@{'/lotto/index/'+${pageInfo.pages-4}+'.html'}" th:text="${pageInfo.pages-4}">1</a></li>
+            <li><a th:href="@{'/lotto/index/'+${pageInfo.pages-3}+'.html'}" th:text="${pageInfo.pages-3}">2</a></li>
+            <li><a th:href="@{'/lotto/index/'+${pageInfo.pages-2}+'.html'}" th:text="${pageInfo.pages-2}">3</a></li>
+            <li><a th:href="@{'/lotto/index/'+${pageInfo.pages-1}+'.html'}" th:text="${pageInfo.pages-1}">4</a></li>
+            <li><a th:href="@{'/lotto/index/'+${pageInfo.pages}+'.html'}" th:text="${pageInfo.pages}">5</a></li>
+            <li th:if="${pageInfo.pageNum<pageInfo.pages}"><a th:href="@{'/lotto/index/'+${pageInfo.pageNum+1}+'.html'}">下一页</a></li>
+            <li th:if="${pageInfo.pageNum==pageInfo.pages}"><a th:href="@{'/lotto/index/'+${pageInfo.pages}+'.html'}">下一页</a></li>
             <li>
-                <a th:href="@{'/lotto/index/'+${pageInfo.pages}}">尾页</a>
+                <a th:href="@{'/lotto/index/'+${pageInfo.pages}+'.html'}">尾页</a>
             </li>
         </ul>
     </div>
