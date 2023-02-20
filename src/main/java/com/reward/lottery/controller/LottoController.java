@@ -7,12 +7,13 @@ import com.reward.lottery.utils.LotteryStatisticsUtils;
 import com.reward.lottery.utils.LotteryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("lotto")
 public class LottoController {
 
@@ -32,11 +33,13 @@ public class LottoController {
     }
 
     @RequestMapping("randomNumber.do")
+    @ResponseBody
     public ResponseEntity<List<String>> randomNumber(){
         return ResponseEntity.ok(LotteryUtils.randomLottery("dlt"));
     }
 
     @RequestMapping("index/{start}")
+    @ResponseBody
     public ResponseEntity<PageInfo<Lotto>> index(@PathVariable(value = "start") Integer start){
         List<Lotto> lottos = lottoService.queryAll(start);
         PageInfo<Lotto> pageInfo = new PageInfo<>(lottos);
@@ -52,27 +55,32 @@ public class LottoController {
     }
 
     @GetMapping("lastLotto")
+    @ResponseBody
     public ResponseEntity<Lotto> queryLastLottoInfo(){
         Lotto lotto = LotteryUtils.setAndReturnLotto(LotteryStatisticsUtils.getLastLotteryInfo("dlt"));
         return ResponseEntity.ok(lotto);
     }
 
     @GetMapping("{id}")
+    @ResponseBody
     public ResponseEntity<Lotto> queryById(@PathVariable("id") String id){
         return ResponseEntity.ok(lottoService.queryById(id));
     }
 
     @GetMapping("queryByIssueNumber/{issueNumber}")
+    @ResponseBody
     public ResponseEntity<Lotto> queryByIssueNumber(@PathVariable("issueNumber") String issueNumber){
         return ResponseEntity.ok(lottoService.queryByIssueNumber(issueNumber));
     }
 
     @GetMapping("queryByDate/{date}")
+    @ResponseBody
     public ResponseEntity<Lotto> queryByDate(@PathVariable("date") String date){
         return ResponseEntity.ok(lottoService.queryByAwardDate(date));
     }
 
     @GetMapping(value = {"costCalculationByNumber/{redBalls}/{blueBalls}/{additionalMultiple}","costCalculationByNumber/{redBalls}/{blueBalls}"})
+    @ResponseBody
     public ResponseEntity<Long> costCalculationByNumber(
             @PathVariable("redBalls") String redBalls,
             @PathVariable("blueBalls") String blueBalls,
@@ -82,6 +90,7 @@ public class LottoController {
     }
 
     @GetMapping(value = {"costCalculationByMultipleType/{multipleType}/{additionalMultiple}", "costCalculationByMultipleType/{multipleType}"})
+    @ResponseBody
     public ResponseEntity<Long> costCalculationByMultipleType(
             @PathVariable("multipleType") String multipleType,
             @PathVariable(value = "additionalMultiple", required = false) Integer additionalMultiple) {
