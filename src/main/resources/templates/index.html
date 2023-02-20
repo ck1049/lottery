@@ -132,7 +132,7 @@
                 <a th:href="@{/lotto/index/1.html}" aria-label="Previous">首页</a>
             </li>
             <li th:if="${pageInfo.pageNum>1}"><a th:href="@{'/lotto/index/'+${pageInfo.pageNum-1}+'.html'}">上一页</a></li>
-            <li th:if="${pageInfo.pageNum==1}"><a th:href="@{/lotto/index/1}">上一页</a></li>
+            <li th:if="${pageInfo.pageNum==1}"><a th:href="@{/lotto/index/1.html}">上一页</a></li>
             <li><a th:href="@{/lotto/index/1.html}">1</a></li>
             <li><a th:href="@{/lotto/index/2.html}">2</a></li>
             <li><a th:href="@{/lotto/index/3.html}">3</a></li>
