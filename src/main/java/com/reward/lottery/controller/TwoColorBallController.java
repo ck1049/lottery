@@ -2,11 +2,10 @@ package com.reward.lottery.controller;
 
 import com.reward.lottery.service.TwoColorBallService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/twoColorBall")
 public class TwoColorBallController {
 
@@ -14,14 +13,12 @@ public class TwoColorBallController {
     private TwoColorBallService twoColorBallService;
 
     @RequestMapping("/saveTwoColorBallStatistics")
-    @ResponseBody
     public String saveTwoColorBallStatistics(){
         twoColorBallService.save();
         return "保存成功！";
     }
 
     @RequestMapping("saveLast")
-    @ResponseBody
     public String saveLastLottoInfo(){
         twoColorBallService.saveLast();
         return "保存成功！";
