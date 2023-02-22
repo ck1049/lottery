@@ -38,17 +38,19 @@ public class LottoController {
         return ResponseEntity.ok(LotteryUtils.randomLottery("dlt"));
     }
 
-    @RequestMapping("index/{start}")
+    @RequestMapping(value = {"index/{start}", "index/{start}/{pageSize}"})
     @ResponseBody
-    public ResponseEntity<PageInfo<Lotto>> index(@PathVariable(value = "start") Integer start){
-        List<Lotto> lottos = lottoService.queryAll(start);
+    public ResponseEntity<PageInfo<Lotto>> index(
+            @PathVariable(value = "start") Integer start,
+            @PathVariable(value = "pageSize", required = false) Integer pageSize){
+        List<Lotto> lottos = lottoService.queryAll(start, pageSize == null ? 20 : pageSize);
         PageInfo<Lotto> pageInfo = new PageInfo<>(lottos);
         return ResponseEntity.ok(pageInfo);
     }
 
     @RequestMapping("index/{start}.html")
     public String index(@PathVariable(value = "start") Integer start, Model model){
-        List<Lotto> lottos = lottoService.queryAll(start);
+        List<Lotto> lottos = lottoService.queryAll(start, 20);
         PageInfo<Lotto> pageInfo = new PageInfo<>(lottos);
         model.addAttribute("pageInfo", pageInfo);
         return "index";

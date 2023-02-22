@@ -42,10 +42,10 @@ public class LottoService {
         }
     }
 
-    public List<Lotto> queryAll(Integer start){
+    public List<Lotto> queryAll(Integer start, Integer pageSize){
         Example example = new Example(Lotto.class);
         example.orderBy("issueNumber").desc();
-        PageHelper.startPage(start, 20);
+        PageHelper.startPage(start, pageSize);
         return lottoDao.selectByExample(example);
     }
 
