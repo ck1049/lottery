@@ -11,10 +11,14 @@ import com.reward.lottery.utils.LotteryStatisticsUtils;
 import com.reward.lottery.utils.LotteryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import tk.mybatis.mapper.entity.Example;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LottoService {
@@ -42,6 +46,18 @@ public class LottoService {
         }
     }
 
+    /**
+     * 根据期号保存大乐透开奖信息
+     * @param start
+     * @param end
+     */
+    public void saveByIssueNumbers(String start, String end) {
+        List<Lotto> lottoList = getByIssueNumbers(start, end);
+        for (Lotto lotto : lottoList) {
+            updateLottoByIssueNumber(lotto);
+        }
+    }
+
     public List<Lotto> queryAll(Integer start, Integer pageSize){
         Example example = new Example(Lotto.class);
         example.orderBy("issueNumber").desc();
@@ -60,6 +76,20 @@ public class LottoService {
     public Lotto getLastlotto(){
         LotteryResVo lottoMap = LotteryStatisticsUtils.getLastLotteryInfo("dlt");
         return LotteryUtils.setAndReturnLotto(lottoMap);
+    }
+
+    /**
+     * 根据期号范围查询大乐透开奖信息
+     * @param start
+     * @param end
+     * @return
+     */
+    public List<Lotto> getByIssueNumbers(String start, String end) {
+        List<LotteryResVo> lottoResList = LotteryStatisticsUtils.historyList("dlt", start, end);
+        if (!CollectionUtils.isEmpty(lottoResList)) {
+            return lottoResList.stream().map(LotteryUtils::setAndReturnLotto).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     public void create(Lotto lotto){
@@ -126,5 +156,16 @@ public class LottoService {
             return 0L;
         }
         return LotteryCombinationsUtils.getCombinations(LotteryType.LOTTO.getType(), Integer.parseInt(types[0]), Integer.parseInt(types[1])).longValue();
+    }
+
+    /**
+     * 根据期号查询或更新大乐透开奖数据
+     */
+    public void updateLottoByIssueNumber(Lotto lotto) {
+        Example example = new Example(Lotto.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("issueNumber", lotto.getIssueNumber());
+        lottoDao.deleteByExample(example);
+        lottoDao.insert(lotto);
     }
 }

@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @Controller
@@ -21,15 +20,43 @@ public class LottoController {
     private LottoService lottoService;
 
     @RequestMapping("saveLottoStatistics")
+    @ResponseBody
     public String saveLottoStatistics(){
         lottoService.save();
         return "保存成功！";
     }
 
     @RequestMapping("saveLast")
+    @ResponseBody
     public String saveLastLottoInfo(){
         lottoService.saveLast();
         return "保存成功！";
+    }
+
+    /**
+     * 根据期号保存大乐透开奖信息
+     * @param start
+     * @param end
+     */
+    @RequestMapping("saveIssueNumbers")
+    @ResponseBody
+    public String saveByIssueNumbers(String start, String end) {
+        lottoService.saveByIssueNumbers(start, end);
+        return "保存成功！";
+    }
+
+    /**
+     * 根据期号实时查询大乐透开奖信息
+     * @param start
+     * @param end
+     * @return
+     */
+    @RequestMapping(value = {"getByIssueNumbersRealTime/{start}/{end}", "getByIssueNumbersRealTime/{start}"})
+    @ResponseBody
+    public ResponseEntity<List<Lotto>> getByIssueNumbersRealTime(
+            @PathVariable(value = "start") String start,
+            @PathVariable(value = "end", required = false) String end){
+        return ResponseEntity.ok(lottoService.getByIssueNumbers(start, end));
     }
 
     @RequestMapping("randomNumber.do")
