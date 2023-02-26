@@ -60,7 +60,7 @@ public class LottoController {
         return ResponseEntity.ok(lottoService.getByIssueNumbers(start, end));
     }
 
-    @RequestMapping(value={"randomNumber", "randomNumber/multipleType"})
+    @RequestMapping(value={"randomNumber", "randomNumber/{multipleType}"})
     @ResponseBody
     public ResponseEntity<Map<String, List<String>>> randomNumber(
             @PathVariable(value = "multipleType", required = false) String multipleType
