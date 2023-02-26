@@ -1,6 +1,7 @@
 package com.reward.lottery.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.reward.lottery.common.enumeration.LotteryType;
 import com.reward.lottery.domain.Lotto;
 import com.reward.lottery.service.LottoService;
 import com.reward.lottery.utils.LotteryStatisticsUtils;
@@ -65,7 +66,7 @@ public class LottoController {
     public ResponseEntity<Map<String, List<String>>> randomNumber(
             @PathVariable(value = "multipleType", required = false) String multipleType
     ){
-        return ResponseEntity.ok(LotteryUtils.randomLottery("dlt", multipleType));
+        return ResponseEntity.ok(LotteryUtils.randomLottery(LotteryType.LOTTO.getType(), multipleType));
     }
 
     @RequestMapping(value = {"index/{start}", "index/{start}/{pageSize}"})
