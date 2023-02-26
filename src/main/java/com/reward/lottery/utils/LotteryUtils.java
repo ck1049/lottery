@@ -36,11 +36,11 @@ public class LotteryUtils {
     public static Map<String, List<String>> randomLottery(String type, String multipleType){
         int[] typeBalls = checkMultipleType(type, multipleType);
 
-        Map<String, List<String>> result = new HashMap<>();
+        Map<String, List<String>> result = new LinkedHashMap<>();
         Set<String> red = new HashSet<>();
         Set<String> blue = new HashSet<>();
         Random random = new Random();
-        if ("ssq".equals(type)){
+        if (LotteryType.TWO_COLOR_BALL.getType().equals(type)){
             while(red.size() < (StringUtils.isBlank(multipleType) ? 6 : typeBalls[0])) {
                 int  ran = random.nextInt(33);
                 red.add(TWO_COLOR_BALL_RED[ran]);
@@ -49,7 +49,7 @@ public class LotteryUtils {
                 int ran = random.nextInt(12);
                 blue.add(TWO_COLOR_BALL_BLUE[ran]);
             }
-        }else if ("dlt".equals(type)){
+        }else if (LotteryType.LOTTO.getType().equals(type)){
             while(red.size() < (StringUtils.isBlank(multipleType) ? 5 : typeBalls[0])){
                 int ran = random.nextInt(35);
                 red.add(LOTTO_RED[ran]);
@@ -117,6 +117,14 @@ public class LotteryUtils {
 
     public static int[] checkMultipleType(String lotteryType, String multipleType) {
         try {
+            if (StringUtils.isBlank(multipleType)) {
+                if (LotteryType.LOTTO.getType().equals(lotteryType)) {
+                    return new int[]{5, 2};
+                }
+                if (LotteryType.TWO_COLOR_BALL.getType().equals(lotteryType)) {
+                    return new int[]{6, 1};
+                }
+            }
             String[] multipleTypes = multipleType.split("[，,+]");
             int redBallsNum = Integer.parseInt(multipleTypes[0]);
             int blueBallsNum = Integer.parseInt(multipleTypes[1]);
