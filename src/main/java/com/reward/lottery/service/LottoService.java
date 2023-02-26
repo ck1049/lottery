@@ -12,10 +12,7 @@ import com.reward.lottery.utils.LotteryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import tk.mybatis.mapper.entity.Example;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -151,11 +148,7 @@ public class LottoService {
      * @return
      */
     public Long getCombinationsByMultipleType(String multipleType) {
-        String[] types = multipleType.split("[\\+,，]");
-        if (types.length != 2) {
-            return 0L;
-        }
-        return LotteryCombinationsUtils.getCombinations(LotteryType.LOTTO.getType(), Integer.parseInt(types[0]), Integer.parseInt(types[1])).longValue();
+        return LotteryCombinationsUtils.getCombinations(LotteryType.LOTTO.getType(), multipleType).longValue();
     }
 
     /**

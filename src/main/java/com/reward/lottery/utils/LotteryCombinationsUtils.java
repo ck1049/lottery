@@ -1,7 +1,6 @@
 package com.reward.lottery.utils;
 
 import com.reward.lottery.common.enumeration.LotteryType;
-
 import java.math.BigInteger;
 
 /**
@@ -15,7 +14,7 @@ public class LotteryCombinationsUtils {
      */
     public static BigInteger getLottoCombinations() {
         String lotteryType = LotteryType.LOTTO.getType();
-        return getCombinations(lotteryType, getRedBalls(lotteryType), getBlueBalls(lotteryType));
+        return getCombinations(lotteryType, null);
     }
 
     /**
@@ -24,31 +23,41 @@ public class LotteryCombinationsUtils {
      */
     public static BigInteger getTwoColorBallCombinations() {
         String lotteryType = LotteryType.TWO_COLOR_BALL.getType();
-        return getCombinations(lotteryType, getRedBalls(lotteryType), getBlueBalls(lotteryType));
+        return getCombinations(lotteryType, null);
     }
 
     /**
      * 根据投注号码(复式)红球、蓝球数量计算组合数
      * @param lotteryType
-     * @param redBallsToChoose
-     * @param blueBallsToChoose
+     * @param multipleType
      * @return
      */
-    public static BigInteger getCombinations(String lotteryType, int redBallsToChoose, int blueBallsToChoose) {
-        if(LotteryType.LOTTO.getType().equals(lotteryType)) {
-            if((redBallsToChoose < 5 || redBallsToChoose > 35 || blueBallsToChoose < 2 || blueBallsToChoose > 12)) {
-                throw new IllegalArgumentException();
-            }
-            return combinations(redBallsToChoose, 5).multiply(combinations(blueBallsToChoose, 2));
+    public static BigInteger getCombinations(String lotteryType, String multipleType) {
+        int[] typeBallsNum = LotteryUtils.checkMultipleType(lotteryType, multipleType);
+        if (LotteryType.LOTTO.getType().equals(lotteryType)) {
+            return combinations(typeBallsNum[0], 5).multiply(combinations(typeBallsNum[1], 2));
         }
-
-        if(LotteryType.TWO_COLOR_BALL.getType().equals(lotteryType)) {
-            if((redBallsToChoose < 6 || redBallsToChoose > 33 || blueBallsToChoose < 1 || blueBallsToChoose > 16)) {
-                throw new IllegalArgumentException();
-            }
-            return combinations(redBallsToChoose, 6).multiply(combinations(blueBallsToChoose, 1));
+        if (LotteryType.TWO_COLOR_BALL.getType().equals(lotteryType)) {
+            return combinations(typeBallsNum[0], 6).multiply(combinations(typeBallsNum[1], 1));
         }
+        throw new IllegalArgumentException();
+    }
 
+    /**
+     * 根据投注号码(复式)红球、蓝球数量计算组合数
+     * @param lotteryType
+     * @param redBallsNum
+     * @param blueBallsNum
+     * @return
+     */
+    public static BigInteger getCombinations(String lotteryType, int redBallsNum, int blueBallsNum) {
+        LotteryUtils.checkBallsNum(lotteryType, redBallsNum, blueBallsNum);
+        if (LotteryType.LOTTO.getType().equals(lotteryType)) {
+            return combinations(redBallsNum, 5).multiply(combinations(blueBallsNum, 2));
+        }
+        if (LotteryType.TWO_COLOR_BALL.getType().equals(lotteryType)) {
+            return combinations(redBallsNum, 6).multiply(combinations(blueBallsNum, 1));
+        }
         throw new IllegalArgumentException();
     }
 

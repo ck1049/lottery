@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("lotto")
@@ -59,10 +60,12 @@ public class LottoController {
         return ResponseEntity.ok(lottoService.getByIssueNumbers(start, end));
     }
 
-    @RequestMapping("randomNumber.do")
+    @RequestMapping(value={"randomNumber", "randomNumber/multipleType"})
     @ResponseBody
-    public ResponseEntity<List<String>> randomNumber(){
-        return ResponseEntity.ok(LotteryUtils.randomLottery("dlt"));
+    public ResponseEntity<Map<String, List<String>>> randomNumber(
+            @PathVariable(value = "multipleType", required = false) String multipleType
+    ){
+        return ResponseEntity.ok(LotteryUtils.randomLottery("dlt", multipleType));
     }
 
     @RequestMapping(value = {"index/{start}", "index/{start}/{pageSize}"})

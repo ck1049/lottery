@@ -1,5 +1,6 @@
 package com.reward.lottery.utils;
 
+import com.reward.lottery.common.enumeration.LotteryType;
 import com.reward.lottery.domain.Lottery;
 import com.reward.lottery.domain.Lotto;
 import com.reward.lottery.domain.LotteryResVo;
@@ -32,22 +33,28 @@ public class LotteryUtils {
             "01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
             "11", "12", "13", "14", "15", "16"};
 
-    public static List<String> randomLottery(String type){
+    public static Map<String, List<String>> randomLottery(String type, String multipleType){
+        int[] typeBalls = checkMultipleType(type, multipleType);
+
+        Map<String, List<String>> result = new HashMap<>();
         Set<String> red = new HashSet<>();
         Set<String> blue = new HashSet<>();
         Random random = new Random();
         if ("ssq".equals(type)){
-            while(red.size() < 6){
+            while(red.size() < (StringUtils.isBlank(multipleType) ? 6 : typeBalls[0])) {
                 int  ran = random.nextInt(33);
                 red.add(TWO_COLOR_BALL_RED[ran]);
             }
-            blue.add(TWO_COLOR_BALL_BLUE[random.nextInt(16)]);
+            while(blue.size() < (StringUtils.isBlank(multipleType) ? 1 : typeBalls[1])){
+                int ran = random.nextInt(12);
+                blue.add(TWO_COLOR_BALL_BLUE[ran]);
+            }
         }else if ("dlt".equals(type)){
-            while(red.size() < 5){
+            while(red.size() < (StringUtils.isBlank(multipleType) ? 5 : typeBalls[0])){
                 int ran = random.nextInt(35);
                 red.add(LOTTO_RED[ran]);
             }
-            while(blue.size() < 2){
+            while(blue.size() < (StringUtils.isBlank(multipleType) ? 2 : typeBalls[1])){
                 int ran = random.nextInt(12);
                 blue.add(LOTTO_BLUE[ran]);
             }
@@ -56,8 +63,9 @@ public class LotteryUtils {
         ArrayList<String> blueList = new ArrayList<>(blue);
         Collections.sort(redList);
         Collections.sort(blueList);
-        redList.addAll(blueList);
-        return redList;
+        result.put("redBalls", redList);
+        result.put("blueBalls", blueList);
+        return result;
     }
 
     public static Lotto setAndReturnLotto(LotteryResVo lotteryResVo){
@@ -107,4 +115,33 @@ public class LotteryUtils {
         return lottery;
     }
 
+    public static int[] checkMultipleType(String lotteryType, String multipleType) {
+        try {
+            String[] multipleTypes = multipleType.split("[，,+]");
+            int redBallsNum = Integer.parseInt(multipleTypes[0]);
+            int blueBallsNum = Integer.parseInt(multipleTypes[1]);
+
+            return checkBallsNum(lotteryType, redBallsNum, blueBallsNum);
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static int[] checkBallsNum(String lotteryType, int redBallsNum, int blueBallsNum) {
+
+        if(LotteryType.LOTTO.getType().equals(lotteryType)) {
+            if((redBallsNum < 5 || redBallsNum > 35 || blueBallsNum < 2 || blueBallsNum > 12)) {
+                throw new IllegalArgumentException();
+            }
+            return new int[]{redBallsNum, blueBallsNum};
+        }
+
+        if(LotteryType.TWO_COLOR_BALL.getType().equals(lotteryType)) {
+            if((redBallsNum < 6 || redBallsNum > 33 || blueBallsNum < 1 || blueBallsNum > 16)) {
+                throw new IllegalArgumentException();
+            }
+            return new int[]{redBallsNum, blueBallsNum};
+        }
+        throw new IllegalArgumentException();
+    }
 }
