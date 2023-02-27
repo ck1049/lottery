@@ -3,7 +3,9 @@ package com.reward.lottery.controller;
 import com.github.pagehelper.PageInfo;
 import com.reward.lottery.common.enumeration.LotteryType;
 import com.reward.lottery.domain.Lotto;
+import com.reward.lottery.domain.WiningRate;
 import com.reward.lottery.service.LottoService;
+import com.reward.lottery.utils.LotteryCombinationsUtils;
 import com.reward.lottery.utils.LotteryStatisticsUtils;
 import com.reward.lottery.utils.LotteryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -128,5 +131,24 @@ public class LottoController {
             @PathVariable("multipleType") String multipleType,
             @PathVariable(value = "additionalMultiple", required = false) Integer additionalMultiple) {
         return ResponseEntity.ok(lottoService.costCalculationByMultipleType(multipleType, additionalMultiple == null ? 0 : additionalMultiple));
+    }
+
+    @GetMapping("winingRate/{multipleType}")
+    @ResponseBody
+    public ResponseEntity<WiningRate> winingRateByMultipleType(
+            @PathVariable("multipleType") String multipleType) {
+        Long numberCombinations = lottoService.getCombinationsByMultipleType(multipleType);
+        BigInteger totalCombinations = LotteryCombinationsUtils.getLottoCombinations();
+        return ResponseEntity.ok(new WiningRate(numberCombinations + "/" + totalCombinations, numberCombinations.doubleValue() / totalCombinations.doubleValue()));
+    }
+
+    @GetMapping("winingRate/{redBalls}/{blueBalls}")
+    @ResponseBody
+    public ResponseEntity<WiningRate> winingRateByNumbers(
+            @PathVariable("redBalls") String redBalls,
+            @PathVariable("blueBalls") String blueBalls) {
+        Long numberCombinations = lottoService.getCombinationsByNumber(redBalls, blueBalls);
+        BigInteger totalCombinations = LotteryCombinationsUtils.getLottoCombinations();
+        return ResponseEntity.ok(new WiningRate(numberCombinations + "/" + totalCombinations, numberCombinations.doubleValue() / totalCombinations.doubleValue()));
     }
 }

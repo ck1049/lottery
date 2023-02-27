@@ -14,7 +14,7 @@ public class LotteryCombinationsUtils {
      */
     public static BigInteger getLottoCombinations() {
         String lotteryType = LotteryType.LOTTO.getType();
-        return getCombinations(lotteryType, null);
+        return getCombinations(lotteryType, LotteryUtils.LOTTO_RED.length + "+" + LotteryUtils.LOTTO_BLUE.length);
     }
 
     /**
@@ -23,7 +23,7 @@ public class LotteryCombinationsUtils {
      */
     public static BigInteger getTwoColorBallCombinations() {
         String lotteryType = LotteryType.TWO_COLOR_BALL.getType();
-        return getCombinations(lotteryType, null);
+        return getCombinations(lotteryType, LotteryUtils.TWO_COLOR_BALL_RED.length + "+" + LotteryUtils.TWO_COLOR_BALL_BLUE.length);
     }
 
     /**
