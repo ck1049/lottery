@@ -133,7 +133,7 @@ public class LottoController {
         return ResponseEntity.ok(lottoService.costCalculationByMultipleType(multipleType, additionalMultiple == null ? 0 : additionalMultiple));
     }
 
-    @GetMapping("winingRate/{multipleType}")
+    @GetMapping("winingRateByMultipleType/{multipleType}")
     @ResponseBody
     public ResponseEntity<WiningRate> winingRateByMultipleType(
             @PathVariable("multipleType") String multipleType) {
@@ -142,7 +142,7 @@ public class LottoController {
         return ResponseEntity.ok(new WiningRate(numberCombinations + "/" + totalCombinations, numberCombinations.doubleValue() / totalCombinations.doubleValue()));
     }
 
-    @GetMapping("winingRate/{redBalls}/{blueBalls}")
+    @GetMapping("winingRateByNumbers/{redBalls}/{blueBalls}")
     @ResponseBody
     public ResponseEntity<WiningRate> winingRateByNumbers(
             @PathVariable("redBalls") String redBalls,
