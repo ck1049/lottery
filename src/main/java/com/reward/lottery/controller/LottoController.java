@@ -140,7 +140,8 @@ public class LottoController {
             @PathVariable("multipleType") String multipleType) {
         Long numberCombinations = lottoService.getCombinationsByMultipleType(multipleType);
         BigInteger totalCombinations = LotteryCombinationsUtils.getLottoCombinations();
-        return ResponseEntity.ok(new WiningRate(numberCombinations + "/" + totalCombinations, numberCombinations.doubleValue() / totalCombinations.doubleValue()));
+        Long[] fractionArr = MathUtils.reductionFraction(numberCombinations, totalCombinations.longValue());
+        return ResponseEntity.ok(new WiningRate(fractionArr[0] + "/" + fractionArr[1], numberCombinations.doubleValue() / totalCombinations.doubleValue()));
     }
 
     @GetMapping("winingRateByNumbers/{redBalls}/{blueBalls}")
