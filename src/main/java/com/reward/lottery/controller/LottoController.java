@@ -8,6 +8,7 @@ import com.reward.lottery.service.LottoService;
 import com.reward.lottery.utils.LotteryCombinationsUtils;
 import com.reward.lottery.utils.LotteryStatisticsUtils;
 import com.reward.lottery.utils.LotteryUtils;
+import com.reward.lottery.utils.MathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -149,6 +150,7 @@ public class LottoController {
             @PathVariable("blueBalls") String blueBalls) {
         Long numberCombinations = lottoService.getCombinationsByNumber(redBalls, blueBalls);
         BigInteger totalCombinations = LotteryCombinationsUtils.getLottoCombinations();
-        return ResponseEntity.ok(new WiningRate(numberCombinations + "/" + totalCombinations, numberCombinations.doubleValue() / totalCombinations.doubleValue()));
+        Long[] fractionArr = MathUtils.reductionFraction(numberCombinations, totalCombinations.longValue());
+        return ResponseEntity.ok(new WiningRate(fractionArr[0] + "/" + fractionArr[1], numberCombinations.doubleValue() / totalCombinations.doubleValue()));
     }
 }
