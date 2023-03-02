@@ -67,7 +67,7 @@ public class LotteryCombinationsUtils {
      * @param choose 取出球数
      * @return
      */
-    private static BigInteger combinations(int total, int choose) {
+    public static BigInteger combinations(int total, int choose) {
         return factorial(total).divide(factorial(choose).multiply(factorial(total - choose)));
     }
 
@@ -82,22 +82,6 @@ public class LotteryCombinationsUtils {
             result = result.multiply(BigInteger.valueOf(i));
         }
         return result;
-    }
-
-    private static int getRedBalls(String lotteryType) {
-        if (LotteryType.TWO_COLOR_BALL.getType().equals(lotteryType)) {
-            return 33;
-        } else {
-            return 35;
-        }
-    }
-
-    private static int getBlueBalls(String lotteryType) {
-        if (LotteryType.TWO_COLOR_BALL.getType().equals(lotteryType)) {
-            return 16;
-        } else {
-            return 12;
-        }
     }
 
     public static void main(String[] args) {

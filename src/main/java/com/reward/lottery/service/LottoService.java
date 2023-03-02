@@ -13,8 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -136,7 +135,8 @@ public class LottoService {
     public Long getCombinationsByNumber(String redBalls, String blueBalls) {
         String[] readBallArray = redBalls.split("[,，\\s]");
         String[] blueBallArray = blueBalls.split("[,，\\s]");
-        if (readBallArray.length < 5 || readBallArray.length > 35 || blueBallArray.length < 2 || blueBallArray.length > 12) {
+        if (readBallArray.length < 5 || readBallArray.length > LotteryType.LOTTO.getRedBallsNum()
+                || blueBallArray.length < 2 || blueBallArray.length > LotteryType.LOTTO.getBlueBallsNum()) {
             return 0L;
         }
         return LotteryCombinationsUtils.getCombinations(LotteryType.LOTTO.getType(), readBallArray.length, blueBallArray.length).longValue();
@@ -160,5 +160,95 @@ public class LottoService {
         criteria.andEqualTo("issueNumber", lotto.getIssueNumber());
         lottoDao.deleteByExample(example);
         lottoDao.insert(lotto);
+    }
+
+    public List<Map<String, Long>> computeCombinationRanking(int periodsNum) {
+        return null;
+    }
+
+    /**
+     * 根据球的个数计算所有的组合数 如：num:2 => 01,02  01,03  num:3 => 01,,02,03  01,02,04等
+     * @return
+     */
+    public static List<String> getCombByBallsNum(int num, String lotteryType, String color) {
+        List<String> list = new ArrayList<>();
+        // 外层set:[[01,02...],[02,03...],[03,04...]]
+        List<Set<String>> setList = new ArrayList<>();
+        Map<String, Object> colorBallNumMap = new HashMap<>();
+        if (LotteryType.LOTTO.getType().equals(lotteryType)) {
+            colorBallNumMap.put("red", LotteryType.LOTTO.getRedBallsNum());
+            colorBallNumMap.put("blue", LotteryType.LOTTO.getBlueBallsNum());
+            colorBallNumMap.put("redBalls", LotteryUtils.LOTTO_RED);
+            colorBallNumMap.put("blueBalls", LotteryUtils.LOTTO_BLUE);
+        }else if (LotteryType.TWO_COLOR_BALL.getType().equals(lotteryType)){
+            colorBallNumMap.put("red", LotteryType.TWO_COLOR_BALL.getRedBallsNum());
+            colorBallNumMap.put("blue", LotteryType.TWO_COLOR_BALL.getBlueBallsNum());
+            colorBallNumMap.put("redBalls", LotteryUtils.TWO_COLOR_BALL_RED);
+            colorBallNumMap.put("blueBalls", LotteryUtils.TWO_COLOR_BALL_BLUE);
+        }else {
+            throw new IllegalArgumentException();
+        }
+
+        Integer ballsTotalNum = (Integer) colorBallNumMap.get(color);
+
+        List<String> arrayList = new ArrayList<>();
+        Integer[] item = new Integer[num];
+        for (int i = 0; i < num; i++) {
+            item[i] = i + 1;
+        }
+        arrayList.add(String.join(",",
+                Arrays.stream(item)
+                        .map(it -> String.format("%02d", it))
+                        .collect(Collectors.joining(","))));
+        int index = num - 1;
+        while (true) {
+            while (true) {
+                item[index]++;
+                arrayList.add(String.join(",",
+                        Arrays.stream(item)
+                                .map(it -> String.format("%02d", it))
+                                .collect(Collectors.joining(","))));
+                if (item[index] >= ballsTotalNum - index + num -1) {
+                    item[index] = num;
+                    break;
+                }
+                index = num - 1;
+            }
+            index--;
+            if (index < 0) {
+                break;
+            }
+        }
+
+        Set<String> stringSet = new LinkedHashSet<>();
+        for (String str : arrayList) {
+            List<String> strList = Arrays.asList(str.split(","));
+            Set<String> set = new HashSet<>();
+            set.addAll(strList);
+            if (set.size() == num) {
+                strList.sort(((o1, o2) -> Integer.parseInt(o1) - Integer.parseInt(o2)));
+                stringSet.add(String.join(",", strList));
+            }
+        }
+        return new ArrayList<>(stringSet);
+    }
+
+    public static List<String> sss() {
+        List<String> list = new ArrayList<>();
+        for (int i = 1; i < 35; i++) {
+            for (int j = i + 1; j <= 35; j++) {
+                list.add(String.format("%02d", i) + "," + String.format("%02d", j));
+            }
+        }
+        return list;
+    }
+
+    public static void main(String[] args) {
+        long startTime = new Date().getTime();
+        List<String> combList = getCombByBallsNum(2, LotteryType.LOTTO.getType(), "red");
+//        List<String> combList = sss();
+        long endTime = new Date().getTime();
+        //System.out.println("初始化时间" + (endTime - startTime) + "ms, 共" + map.keySet().size() + "个组合" + map.keySet());
+        System.out.println("初始化时间" + (endTime - startTime) + "ms, 共" + combList.size() + "个组合\n" + String.join("\n", combList));
     }
 }

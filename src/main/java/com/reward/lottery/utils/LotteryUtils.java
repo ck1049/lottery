@@ -138,14 +138,14 @@ public class LotteryUtils {
     public static int[] checkBallsNum(String lotteryType, int redBallsNum, int blueBallsNum) {
 
         if(LotteryType.LOTTO.getType().equals(lotteryType)) {
-            if((redBallsNum < 5 || redBallsNum > 35 || blueBallsNum < 2 || blueBallsNum > 12)) {
+            if((redBallsNum < 5 || redBallsNum > LotteryType.LOTTO.getRedBallsNum() || blueBallsNum < 2 || blueBallsNum > LotteryType.LOTTO.getBlueBallsNum())) {
                 throw new IllegalArgumentException();
             }
             return new int[]{redBallsNum, blueBallsNum};
         }
 
         if(LotteryType.TWO_COLOR_BALL.getType().equals(lotteryType)) {
-            if((redBallsNum < 6 || redBallsNum > 33 || blueBallsNum < 1 || blueBallsNum > 16)) {
+            if((redBallsNum < 6 || redBallsNum > LotteryType.TWO_COLOR_BALL.getRedBallsNum() || blueBallsNum < 1 || blueBallsNum > LotteryType.TWO_COLOR_BALL.getBlueBallsNum())) {
                 throw new IllegalArgumentException();
             }
             return new int[]{redBallsNum, blueBallsNum};
