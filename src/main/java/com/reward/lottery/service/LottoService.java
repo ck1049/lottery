@@ -216,6 +216,13 @@ public class LottoService {
             }
             index--;
             if (index < 0) {
+                for (int i = 0; i < num; i++) {
+                    item[i] = ballsTotalNum + i - num +1;
+                }
+                arrayList.add(String.join(",",
+                        Arrays.stream(item)
+                                .map(it -> String.format("%02d", it))
+                                .collect(Collectors.joining(","))));
                 break;
             }
         }
@@ -235,9 +242,11 @@ public class LottoService {
 
     public static List<String> sss() {
         List<String> list = new ArrayList<>();
-        for (int i = 1; i < 35; i++) {
-            for (int j = i + 1; j <= 35; j++) {
-                list.add(String.format("%02d", i) + "," + String.format("%02d", j));
+        for (int i = 1; i < 34; i++) {
+            for (int j = i + 1; j < 35; j++) {
+                for (int k = j + 1; k <= 35; k++) {
+                    list.add(String.format("%02d", i) + "," + String.format("%02d", j));
+                }
             }
         }
         return list;
@@ -245,7 +254,7 @@ public class LottoService {
 
     public static void main(String[] args) {
         long startTime = new Date().getTime();
-        List<String> combList = getCombByBallsNum(2, LotteryType.LOTTO.getType(), "red");
+        List<String> combList = getCombByBallsNum(3, LotteryType.LOTTO.getType(), "red");
 //        List<String> combList = sss();
         long endTime = new Date().getTime();
         //System.out.println("初始化时间" + (endTime - startTime) + "ms, 共" + map.keySet().size() + "个组合" + map.keySet());
