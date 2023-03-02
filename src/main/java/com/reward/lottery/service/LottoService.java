@@ -208,7 +208,7 @@ public class LottoService {
                         Arrays.stream(item)
                                 .map(it -> String.format("%02d", it))
                                 .collect(Collectors.joining(","))));
-                if (item[index] >= ballsTotalNum - index + num -1) {
+                if (item[index] >= ballsTotalNum + index - num + 1) {
                     item[index] = num;
                     break;
                 }
