@@ -245,7 +245,7 @@ public class LottoService {
         for (int i = 1; i < 34; i++) {
             for (int j = i + 1; j < 35; j++) {
                 for (int k = j + 1; k <= 35; k++) {
-                    list.add(String.format("%02d", i) + "," + String.format("%02d", j));
+                    list.add(String.format("%02d", i) + "," + String.format("%02d", j) + "," + String.format("%02d", k));
                 }
             }
         }
@@ -254,8 +254,8 @@ public class LottoService {
 
     public static void main(String[] args) {
         long startTime = new Date().getTime();
-        List<String> combList = getCombByBallsNum(3, LotteryType.LOTTO.getType(), "red");
-//        List<String> combList = sss();
+//        List<String> combList = getCombByBallsNum(3, LotteryType.LOTTO.getType(), "red");
+        List<String> combList = sss();
         long endTime = new Date().getTime();
         //System.out.println("初始化时间" + (endTime - startTime) + "ms, 共" + map.keySet().size() + "个组合" + map.keySet());
         System.out.println("初始化时间" + (endTime - startTime) + "ms, 共" + combList.size() + "个组合\n" + String.join("\n", combList));
