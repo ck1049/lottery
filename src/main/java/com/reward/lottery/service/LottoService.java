@@ -210,6 +210,7 @@ public class LottoService {
                 }
             }
 
+            // 36进制加法
             for (int idx = index; idx > 0; idx--) {
                 if (item[idx] >= ballsTotalNum + index - num + 1) {
                     item[idx-1]++;
@@ -217,6 +218,7 @@ public class LottoService {
                 }
             }
 
+            // 最后一组数字校正
             if (item[0] == ballsTotalNum - num + 1) {
                 for (int i = 1; i < num; i++) {
                     item[i] = item[i-1] + 1;
@@ -229,6 +231,7 @@ public class LottoService {
             }
         }
 
+        // 去重+排序
         Set<String> stringSet = new LinkedHashSet<>();
         for (String str : arrayList) {
             List<String> strList = Arrays.asList(str.split(","));

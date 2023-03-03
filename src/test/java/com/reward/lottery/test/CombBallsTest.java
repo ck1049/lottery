@@ -11,7 +11,7 @@ public class CombBallsTest {
     public static void main(String[] args) {
         long startTime = new Date().getTime();
         Integer ballsTotalNum = 35;
-        int num = 5;
+        int num = 6;
         List<String> arrayList = new ArrayList<>();
         Integer[] item = new Integer[num];
         for (int i = 0; i < num; i++) {
