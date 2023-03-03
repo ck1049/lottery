@@ -210,17 +210,17 @@ public class LottoService {
                 }
             }
 
-            for (int idx = index; idx >= 0; idx--) {
+            for (int idx = index; idx > 0; idx--) {
                 if (item[idx] >= ballsTotalNum + index - num + 1) {
-                    if (idx != 0) {
-                        item[idx-1]++;
-                        item[idx] = item[idx-1] >= ballsTotalNum + index - num + 1 ? num : item[idx-1] + 1;
-                    }
+                    item[idx-1]++;
+                    item[idx] = item[idx-1] >= ballsTotalNum + index - num + 1 ? num : item[idx-1] + 1;
                 }
             }
 
             if (item[0] == ballsTotalNum - num + 1) {
-                item[index] = ballsTotalNum;
+                for (int i = 1; i < num; i++) {
+                    item[i] = item[i-1] + 1;
+                }
                 arrayList.add(String.join(",",
                         Arrays.stream(item)
                                 .map(it -> String.format("%02d", it))
