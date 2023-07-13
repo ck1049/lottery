@@ -9,11 +9,12 @@ import com.reward.lottery.utils.LotteryCombinationsUtils;
 import com.reward.lottery.utils.LotteryStatisticsUtils;
 import com.reward.lottery.utils.LotteryUtils;
 import com.reward.lottery.utils.MathUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,7 @@ import java.util.Map;
 @RequestMapping("lotto")
 public class LottoController {
 
-    @Autowired
+    @Resource(name = "lottoService")
     private LottoService lottoService;
 
     @RequestMapping("saveLottoStatistics")

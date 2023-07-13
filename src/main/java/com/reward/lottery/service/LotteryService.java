@@ -2,25 +2,32 @@ package com.reward.lottery.service;
 
 import com.github.pagehelper.PageHelper;
 import com.reward.lottery.common.enumeration.LotteryType;
-import com.reward.lottery.domain.Lotto;
+import com.reward.lottery.domain.LotteryInformation;
 import com.reward.lottery.domain.LotteryResVo;
+import com.reward.lottery.domain.Lotto;
+import com.reward.lottery.mapper.LotteryDao;
 import com.reward.lottery.mapper.LottoDao;
 import com.reward.lottery.utils.DateUtils;
 import com.reward.lottery.utils.LotteryCombinationsUtils;
 import com.reward.lottery.utils.LotteryStatisticsUtils;
 import com.reward.lottery.utils.LotteryUtils;
+import com.reward.lottery.vo.LotteryInformationVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
+
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class LottoService {
+public class LotteryService {
 
-    @Autowired
+    @Resource
     private LottoDao lottoDao;
+    @Resource
+    private LotteryDao lotteryDao;
 
     public void save(){
         List<LotteryResVo> list = LotteryStatisticsUtils.historyList("dlt");
@@ -162,6 +169,20 @@ public class LottoService {
         lottoDao.insert(lotto);
     }
 
+
+    /**
+     * 开奖信息
+     * @return
+     */
+    public List<LotteryInformationVo> lotteryInformation() {
+        return lotteryDao.lotteryInformationList().stream().map(item -> {
+            Date awardDate = DateUtils.parse(item.getAwardDate(), "yyyy-MM-dd");
+            return new LotteryInformationVo(item.getName(), item.getEnName(), item.getIssueNumber(),
+                    DateUtils.format(awardDate, "MM.dd"), DateUtils.week(awardDate).getSimpleName(),
+                    item.getBonusPool(), item.getRedBalls().split(","), item.getBlueBalls().split(","));
+        }).collect(Collectors.toList());
+    }
+
     public List<Map<String, Long>> computeCombinationRanking(int periodsNum) {
         return null;
     }
@@ -265,4 +286,5 @@ public class LottoService {
         //System.out.println("初始化时间" + (endTime - startTime) + "ms, 共" + map.keySet().size() + "个组合" + map.keySet());
         System.out.println("初始化时间" + (endTime - startTime) + "ms, 共" + combList.size() + "个组合\n" + String.join("\n", combList));
     }
+
 }

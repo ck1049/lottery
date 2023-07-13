@@ -70,7 +70,7 @@ public class TwoColorBallService {
 
     public TwoColorBall queryByAwardDate(String date) {
         Example example = new Example(TwoColorBall.class);
-        example.createCriteria().andEqualTo("awardDate", DateUtils.formatDateToString(date));
+        example.createCriteria().andEqualTo("awardDate", DateUtils.formatDateString(date));
         return twoColorBallDao.selectOneByExample(example);
     }
 }
