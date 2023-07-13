@@ -63,4 +63,17 @@ public class DateUtils {
     public static void main(String[] args) {
         System.out.println(week(new Date()));
     }
+
+    /**
+     * 日期便宜offset天
+     * @param date
+     * @param offset
+     * @return
+     */
+    public static Date offsetDay(Date date, int offset) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, offset);
+        return calendar.getTime();
+    }
 }
