@@ -177,8 +177,10 @@ public class LotteryService {
     public List<LotteryInformationVo> lotteryInformation() {
         return lotteryDao.lotteryInformationList().stream().map(item -> {
             Date awardDate = DateUtils.parse(item.getAwardDate(), "yyyy-MM-dd");
+            String week = DateUtils.format(new Date(), "yyyy-MM-dd").equals(item.getAwardDate())
+                    ? "今天" : DateUtils.week(awardDate).getSimpleName();
             return new LotteryInformationVo(item.getName(), item.getEnName(), item.getIssueNumber(),
-                    DateUtils.format(awardDate, "MM.dd"), DateUtils.week(awardDate).getSimpleName(),
+                    DateUtils.format(awardDate, "MM.dd"), week,
                     item.getBonusPool(), item.getRedBalls().split(","), item.getBlueBalls().split(","));
         }).collect(Collectors.toList());
     }
