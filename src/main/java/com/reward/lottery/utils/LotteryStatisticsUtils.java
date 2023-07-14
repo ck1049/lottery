@@ -48,7 +48,7 @@ public class LotteryStatisticsUtils {
             LotteryResVo lotteryResVo = new LotteryResVo();
             Elements tds = e.select("td");
             lotteryResVo.setNumber(tds.get(1).text()+tds.get(2).text()+tds.get(3).text()+tds.get(4).text()+tds.get(5).text()+tds.get(6).text()+tds.get(7).text());
-            lotteryResVo.setIssueNumber(tds.get(0).text());
+            lotteryResVo.setIssueNumber(Integer.parseInt(tds.get(0).text()));
             if ("ssq".equals(typeStr)){
                 lotteryResVo.setAwardDate(tds.get(15).text());
                 lotteryResVo.setFirstPrizeNumber(tds.get(10).text());
