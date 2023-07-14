@@ -11,7 +11,7 @@ public class LotteryInformation {
 
     private String name;
     private String enName;
-    private String issueNumber;
+    private Integer issueNumber;
     private String awardDate;
     private String week;
     private BigDecimal bonusPool;

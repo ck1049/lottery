@@ -1,6 +1,6 @@
 package com.reward.lottery.utils;
 
-import com.reward.lottery.domain.LotteryResVo;
+import com.reward.lottery.vo.LotteryResVo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;

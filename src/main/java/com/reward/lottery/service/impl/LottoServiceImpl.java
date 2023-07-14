@@ -1,34 +1,29 @@
-package com.reward.lottery.service;
+package com.reward.lottery.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.reward.lottery.common.enumeration.LotteryType;
-import com.reward.lottery.domain.LotteryInformation;
-import com.reward.lottery.domain.LotteryResVo;
 import com.reward.lottery.domain.Lotto;
-import com.reward.lottery.mapper.LotteryDao;
+import com.reward.lottery.vo.LotteryResVo;
 import com.reward.lottery.mapper.LottoDao;
+import com.reward.lottery.service.ILottoService;
 import com.reward.lottery.utils.DateUtils;
 import com.reward.lottery.utils.LotteryCombinationsUtils;
 import com.reward.lottery.utils.LotteryStatisticsUtils;
 import com.reward.lottery.utils.LotteryUtils;
-import com.reward.lottery.vo.LotteryInformationVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
-
-import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class LotteryService {
+public class LottoServiceImpl implements ILottoService {
 
-    @Resource
+    @Autowired
     private LottoDao lottoDao;
-    @Resource
-    private LotteryDao lotteryDao;
 
+    @Override
     public void save(){
         List<LotteryResVo> list = LotteryStatisticsUtils.historyList("dlt");
         for (LotteryResVo lotteryResVo : list) {
@@ -36,6 +31,7 @@ public class LotteryService {
         }
     }
 
+    @Override
     public void saveLast() {
         Lotto lastLotto = getLastlotto();
         Example example = new Example(Lotto.class);
@@ -54,6 +50,7 @@ public class LotteryService {
      * @param start
      * @param end
      */
+    @Override
     public void saveByIssueNumbers(String start, String end) {
         List<Lotto> lottoList = getByIssueNumbers(start, end);
         for (Lotto lotto : lottoList) {
@@ -61,6 +58,7 @@ public class LotteryService {
         }
     }
 
+    @Override
     public List<Lotto> queryAll(Integer start, Integer pageSize){
         Example example = new Example(Lotto.class);
         example.orderBy("issueNumber").desc();
@@ -68,6 +66,7 @@ public class LotteryService {
         return lottoDao.selectByExample(example);
     }
 
+    @Override
     public Lotto queryById(String id){
         return lottoDao.selectByPrimaryKey(id);
     }
@@ -76,6 +75,7 @@ public class LotteryService {
      * 获取最近一期大乐透
      * @return
      */
+    @Override
     public Lotto getLastlotto(){
         LotteryResVo lottoMap = LotteryStatisticsUtils.getLastLotteryInfo("dlt");
         return LotteryUtils.setAndReturnLotto(lottoMap);
@@ -87,6 +87,7 @@ public class LotteryService {
      * @param end
      * @return
      */
+    @Override
     public List<Lotto> getByIssueNumbers(String start, String end) {
         List<LotteryResVo> lottoResList = LotteryStatisticsUtils.historyList("dlt", start, end);
         if (!CollectionUtils.isEmpty(lottoResList)) {
@@ -95,17 +96,15 @@ public class LotteryService {
         return new ArrayList<>();
     }
 
-    public void create(Lotto lotto){
-        lottoDao.insert(lotto);
-    }
-
-    public Lotto queryByIssueNumber(String issueNumber) {
+    @Override
+    public Lotto queryByIssueNumber(Integer issueNumber) {
         Example example = new Example(Lotto.class);
         example.createCriteria().andEqualTo("issueNumber", issueNumber);
         return lottoDao.selectOneByExample(example);
     }
 
 
+    @Override
     public Lotto queryByAwardDate(String date) {
         Example example = new Example(Lotto.class);
         example.createCriteria().andEqualTo("awardDate", DateUtils.formatDateString(date));
@@ -119,6 +118,7 @@ public class LotteryService {
      * @param additionalMultiple 追加倍数
      * @return
      */
+    @Override
     public Long costCalculationByNumber(String redBalls, String blueBalls, Integer additionalMultiple) {
         return (2 + additionalMultiple) * getCombinationsByNumber(redBalls, blueBalls);
     }
@@ -129,6 +129,7 @@ public class LotteryService {
      * @param additionalMultiple 追加倍数
      * @return
      */
+    @Override
     public Long costCalculationByMultipleType(String multipleType, Integer additionalMultiple) {
         return (2 + additionalMultiple) * getCombinationsByMultipleType(multipleType);
     }
@@ -139,6 +140,7 @@ public class LotteryService {
      * @param blueBalls 蓝球
      * @return
      */
+    @Override
     public Long getCombinationsByNumber(String redBalls, String blueBalls) {
         String[] readBallArray = redBalls.split("[,，\\s]");
         String[] blueBallArray = blueBalls.split("[,，\\s]");
@@ -154,6 +156,7 @@ public class LotteryService {
      * @param multipleType 复式类型 例：6,3 或 6，3 或 6+3
      * @return
      */
+    @Override
     public Long getCombinationsByMultipleType(String multipleType) {
         return LotteryCombinationsUtils.getCombinations(LotteryType.LOTTO.getType(), multipleType).longValue();
     }
@@ -161,6 +164,7 @@ public class LotteryService {
     /**
      * 根据期号查询或更新大乐透开奖数据
      */
+    @Override
     public void updateLottoByIssueNumber(Lotto lotto) {
         Example example = new Example(Lotto.class);
         Example.Criteria criteria = example.createCriteria();
@@ -169,25 +173,12 @@ public class LotteryService {
         lottoDao.insert(lotto);
     }
 
-
-    /**
-     * 开奖信息
-     * @return
-     */
-    public List<LotteryInformationVo> lotteryInformation() {
-        return lotteryDao.lotteryInformationList().stream().map(item -> {
-            Date awardDate = DateUtils.parse(item.getAwardDate(), "yyyy-MM-dd");
-            String week = DateUtils.format(new Date(), "yyyy-MM-dd").equals(item.getAwardDate())
-                    ? "今天" : DateUtils.format(DateUtils.offsetDay(new Date(), -1), "yyyy-MM-dd").equals(item.getAwardDate())
-                    ? "昨天" : DateUtils.week(awardDate).getSimpleName();
-            return new LotteryInformationVo(item.getName(), item.getEnName(), item.getIssueNumber(),
-                    DateUtils.format(awardDate, "MM.dd"), week,
-                    item.getBonusPool(), item.getRedBalls().split(","), item.getBlueBalls().split(","));
-        }).collect(Collectors.toList());
-    }
-
     public List<Map<String, Long>> computeCombinationRanking(int periodsNum) {
         return null;
+    }
+
+    public void create(Lotto lotto){
+        lottoDao.insert(lotto);
     }
 
     /**
@@ -289,5 +280,4 @@ public class LotteryService {
         //System.out.println("初始化时间" + (endTime - startTime) + "ms, 共" + map.keySet().size() + "个组合" + map.keySet());
         System.out.println("初始化时间" + (endTime - startTime) + "ms, 共" + combList.size() + "个组合\n" + String.join("\n", combList));
     }
-
 }

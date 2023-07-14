@@ -21,7 +21,7 @@ public class MyTwoColorBall implements Serializable {
     /**
      * 期号
      */
-    private String issueNumber;
+    private Integer issueNumber;
     
     private String number;
     

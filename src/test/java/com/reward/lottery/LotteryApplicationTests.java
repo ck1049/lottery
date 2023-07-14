@@ -1,6 +1,6 @@
 package com.reward.lottery;
 
-import com.reward.lottery.service.LottoService;
+import com.reward.lottery.service.ILottoService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +12,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 class LotteryApplicationTests {
 
     @Autowired
-    private LottoService lottoService;
+    private ILottoService iLottoService;
 
     @Test
     void contextLoads() {
-        System.out.println(lottoService.getLastlotto());
+        System.out.println(iLottoService.getLastlotto());
     }
 
 }

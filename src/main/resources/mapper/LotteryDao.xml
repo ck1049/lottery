@@ -3,11 +3,11 @@
 <mapper namespace="com.reward.lottery.mapper.LotteryDao">
 
     <select id="lotteryInformationList" resultType="com.reward.lottery.domain.LotteryInformation">
-        SELECT * FROM(SELECT '双色球' AS name, 'twoColorBall' AS en_name, issue_number, award_date, bonus_pool,
+        SELECT * FROM(SELECT '双色球' AS name, 'twoColorBall' AS en_name, issue_number, award_date, ROUND(bonus_pool * POW(10, -8), 2) as bonus_pool,
                              CONCAT(red1, ',', red2, ',', red3, ',', red4, ',', red5, ',', red6) AS red_balls, blue1 AS blue_balls
                       from two_color_ball ORDER BY issue_number DESC LIMIT 1) a
         UNION ALL
-        SELECT * FROM(select '超级大乐透' AS name, 'lotto' AS en_name, issue_number, award_date, bonus_pool,
+        SELECT * FROM(select '超级大乐透' AS name, 'lotto' AS en_name, issue_number, award_date, ROUND(bonus_pool * POW(10, -8), 2) as bonus_pool,
                              CONCAT(red1, ',', red2, ',', red3, ',', red4, ',', red5) AS red_balls, CONCAT(blue1, ',', blue2) AS blue_balls
                       FROM lotto ORDER BY issue_number DESC LIMIT 1) b
     </select>

@@ -3,7 +3,7 @@ package com.reward.lottery.utils;
 import com.reward.lottery.common.enumeration.LotteryType;
 import com.reward.lottery.domain.Lottery;
 import com.reward.lottery.domain.Lotto;
-import com.reward.lottery.domain.LotteryResVo;
+import com.reward.lottery.vo.LotteryResVo;
 import com.reward.lottery.domain.TwoColorBall;
 import java.util.*;
 
@@ -77,7 +77,7 @@ public class LotteryUtils {
     }
 
     public static Lottery setAndReturnLottery(String mold, LotteryResVo lotteryResVo){
-        String issueNumber = lotteryResVo.getIssueNumber();//期号
+        Integer issueNumber = lotteryResVo.getIssueNumber();//期号
         String awardDate = lotteryResVo.getAwardDate();
         String number = lotteryResVo.getNumber();
         String bonusPool = lotteryResVo.getBonusPool();//奖池金额

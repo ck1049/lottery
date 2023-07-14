@@ -35,7 +35,7 @@ public class TwoColorBall extends Lottery {
         this.blue1 = blue1;
     }
 
-    public TwoColorBall(String number, String red1, String red2, String red3, String red4, String red5, String red6, String blue1, String type, String issueNumber, String awardDate, Integer sort){
+    public TwoColorBall(String number, String red1, String red2, String red3, String red4, String red5, String red6, String blue1, String type, Integer issueNumber, String awardDate, Integer sort){
         super(type, issueNumber, awardDate, sort);
         this.number = number;
         this.red1 = red1;

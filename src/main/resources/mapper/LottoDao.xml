@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.reward.lottery.mapper.LottoDao">
+    <select id="historicalInformation" resultType="com.reward.lottery.domain.HistoricalInformation">
+        SELECT '超级大乐透' AS name, 'lotto' AS en_name, issue_number, DATE_FORMAT(award_date, '%m.%d') as award_date,
+               DATE_FORMAT(award_date, '%w') as week, ROUND(bonus_pool * POW(10, -8), 2) as bonus_pool,
+               CONCAT(red1, ',', red2, ',', red3, ',', red4, ',', red5) AS red_balls, CONCAT(blue1, ',', blue2) AS blue_balls,
+               first_prize_number, first_prize_amount, second_prize_number, second_prize_amount
+        FROM lotto
+        WHERE issue_number &lt; #{minIssueNumber}
+        ORDER BY issue_number DESC  LIMIT #{pageSize}
+    </select>
+</mapper>

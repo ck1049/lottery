@@ -1,5 +1,8 @@
 package com.reward.lottery.common.enumeration;
 
+import lombok.Getter;
+
+@Getter
 public enum LotteryType {
 
     TWO_COLOR_BALL(1, "TWO_COLOR_BALL", 33, 16),
@@ -17,19 +20,4 @@ public enum LotteryType {
         this.blueBallsNum = blueBallsNum;
     }
 
-    public Integer getCode() {
-        return code;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public Integer getRedBallsNum() {
-        return redBallsNum;
-    }
-
-    public Integer getBlueBallsNum() {
-        return blueBallsNum;
-    }
 }

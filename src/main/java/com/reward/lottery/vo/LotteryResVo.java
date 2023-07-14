@@ -1,4 +1,4 @@
-package com.reward.lottery.domain;
+package com.reward.lottery.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class LotteryResVo {
 
     private String number;
-    private String issueNumber;
+    private Integer issueNumber;
     private String awardDate;
     private String firstPrizeNumber;
     private String firstPrizeAmount;

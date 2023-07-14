@@ -29,7 +29,7 @@ public class MyLotto implements Serializable {
     /**
      * 期号
      */
-    private String issueNumber;
+    private Integer issueNumber;
     
     private String number;
     

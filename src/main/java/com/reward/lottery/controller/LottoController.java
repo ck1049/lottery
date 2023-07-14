@@ -4,7 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.reward.lottery.common.enumeration.LotteryType;
 import com.reward.lottery.domain.Lotto;
 import com.reward.lottery.domain.WiningRate;
-import com.reward.lottery.service.LottoService;
+import com.reward.lottery.service.ILottoService;
 import com.reward.lottery.utils.LotteryCombinationsUtils;
 import com.reward.lottery.utils.LotteryStatisticsUtils;
 import com.reward.lottery.utils.LotteryUtils;
@@ -23,8 +23,8 @@ import java.util.Map;
 @RequestMapping("lotto")
 public class LottoController {
 
-    @Resource(name = "lottoService")
-    private LottoService lottoService;
+    @Resource(name = "lottoServiceImpl")
+    private ILottoService lottoService;
 
     @RequestMapping("saveLottoStatistics")
     @ResponseBody
@@ -107,7 +107,7 @@ public class LottoController {
 
     @GetMapping("queryByIssueNumber/{issueNumber}")
     @ResponseBody
-    public ResponseEntity<Lotto> queryByIssueNumber(@PathVariable("issueNumber") String issueNumber){
+    public ResponseEntity<Lotto> queryByIssueNumber(@PathVariable("issueNumber") Integer issueNumber){
         return ResponseEntity.ok(lottoService.queryByIssueNumber(issueNumber));
     }
 

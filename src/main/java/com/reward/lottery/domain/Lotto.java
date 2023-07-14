@@ -35,7 +35,7 @@ public class Lotto extends Lottery {
         this.blue2 = blue2;
     }
 
-    public Lotto(String number, String red1, String red2, String red3, String red4, String red5, String blue1, String blue2, String type, String issueNumber, String awardDate, Integer sort){
+    public Lotto(String number, String red1, String red2, String red3, String red4, String red5, String blue1, String blue2, String type, Integer issueNumber, String awardDate, Integer sort){
         super(type, issueNumber, awardDate, sort);
         this.number = number;
         this.red1 = red1;

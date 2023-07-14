@@ -1,10 +1,11 @@
-package com.reward.lottery.service;
+package com.reward.lottery.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.reward.lottery.domain.Lotto;
-import com.reward.lottery.domain.LotteryResVo;
+import com.reward.lottery.vo.LotteryResVo;
 import com.reward.lottery.domain.TwoColorBall;
 import com.reward.lottery.mapper.TwoColorBallDao;
+import com.reward.lottery.service.ITwoColorBallService;
 import com.reward.lottery.utils.DateUtils;
 import com.reward.lottery.utils.LotteryStatisticsUtils;
 import com.reward.lottery.utils.LotteryUtils;
@@ -14,7 +15,7 @@ import tk.mybatis.mapper.entity.Example;
 import java.util.List;
 
 @Service
-public class TwoColorBallService {
+public class TwoColorBallServiceImpl implements ITwoColorBallService {
 
     @Autowired
     private TwoColorBallDao twoColorBallDao;
@@ -26,6 +27,7 @@ public class TwoColorBallService {
         }
     }
 
+    @Override
     public void saveLast() {
         TwoColorBall lastTwoColorBall = getLastTwoColorBall();
         Example example = new Example(Lotto.class);
@@ -62,7 +64,7 @@ public class TwoColorBallService {
         twoColorBallDao.insert(twoColorBall);
     }
 
-    public TwoColorBall queryByIssueNumber(String issueNumber) {
+    public TwoColorBall queryByIssueNumber(Integer issueNumber) {
         Example example = new Example(TwoColorBall.class);
         example.createCriteria().andEqualTo("issueNumber", issueNumber);
         return twoColorBallDao.selectOneByExample(example);

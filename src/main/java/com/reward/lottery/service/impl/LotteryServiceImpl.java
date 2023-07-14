@@ -1,26 +1,42 @@
-package com.reward.lottery.service;
+package com.reward.lottery.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.reward.lottery.common.enumeration.LotteryType;
+import com.reward.lottery.domain.HistoricalInformation;
+import com.reward.lottery.vo.LotteryResVo;
 import com.reward.lottery.domain.Lotto;
-import com.reward.lottery.domain.LotteryResVo;
+import com.reward.lottery.domain.TwoColorBall;
+import com.reward.lottery.mapper.LotteryDao;
 import com.reward.lottery.mapper.LottoDao;
+import com.reward.lottery.mapper.TwoColorBallDao;
+import com.reward.lottery.service.ILotteryService;
 import com.reward.lottery.utils.DateUtils;
 import com.reward.lottery.utils.LotteryCombinationsUtils;
 import com.reward.lottery.utils.LotteryStatisticsUtils;
 import com.reward.lottery.utils.LotteryUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.reward.lottery.vo.HistoricalInformationVo;
+import com.reward.lottery.vo.LotteryInformationVo;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
+
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service
-public class LottoService {
+import static com.reward.lottery.common.enumeration.LotteryType.LOTTO;
+import static com.reward.lottery.common.enumeration.LotteryType.TWO_COLOR_BALL;
 
-    @Autowired
+@Service
+public class LotteryServiceImpl implements ILotteryService {
+
+    @Resource
+    private TwoColorBallDao twoColorBallDao;
+
+    @Resource
     private LottoDao lottoDao;
+    @Resource
+    private LotteryDao lotteryDao;
 
     public void save(){
         List<LotteryResVo> list = LotteryStatisticsUtils.historyList("dlt");
@@ -92,7 +108,7 @@ public class LottoService {
         lottoDao.insert(lotto);
     }
 
-    public Lotto queryByIssueNumber(String issueNumber) {
+    public Lotto queryByIssueNumber(Integer issueNumber) {
         Example example = new Example(Lotto.class);
         example.createCriteria().andEqualTo("issueNumber", issueNumber);
         return lottoDao.selectOneByExample(example);
@@ -162,6 +178,37 @@ public class LottoService {
         lottoDao.insert(lotto);
     }
 
+
+    /**
+     * 开奖信息
+     * @return
+     */
+    @Override
+    public List<LotteryInformationVo> lotteryInformation() {
+        return lotteryDao.lotteryInformationList().stream().map(item -> {
+            Date awardDate = DateUtils.parse(item.getAwardDate(), "yyyy-MM-dd");
+            String week = DateUtils.format(new Date(), "yyyy-MM-dd").equals(item.getAwardDate())
+                    ? "今天" : DateUtils.format(DateUtils.offsetDay(new Date(), -1), "yyyy-MM-dd").equals(item.getAwardDate())
+                    ? "昨天" : DateUtils.week(awardDate).getSimpleName();
+            return new LotteryInformationVo(item.getName(), item.getEnName(), item.getIssueNumber(),
+                    DateUtils.format(awardDate, "MM.dd"), week,
+                    item.getBonusPool(), item.getRedBalls().split(","), item.getBlueBalls().split(","));
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<HistoricalInformationVo> historicalInformation(String enName, String minIssueNumber, Integer pageSize) {
+        if (TWO_COLOR_BALL.getType().replace("_", "").equals(enName.toUpperCase())) {
+            List<HistoricalInformation> list = twoColorBallDao.historicalInformation(minIssueNumber, pageSize);
+            return list.stream().map(HistoricalInformationVo::new).collect(Collectors.toList());
+        }
+        if (LOTTO.getType().replace("_", "").equals(enName.toUpperCase())) {
+            List<HistoricalInformation> list = lottoDao.historicalInformation(minIssueNumber, pageSize);
+            return list.stream().map(HistoricalInformationVo::new).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
     public List<Map<String, Long>> computeCombinationRanking(int periodsNum) {
         return null;
     }
@@ -180,9 +227,9 @@ public class LottoService {
             colorBallNumMap.put("blue", LotteryType.LOTTO.getBlueBallsNum());
             colorBallNumMap.put("redBalls", LotteryUtils.LOTTO_RED);
             colorBallNumMap.put("blueBalls", LotteryUtils.LOTTO_BLUE);
-        }else if (LotteryType.TWO_COLOR_BALL.getType().equals(lotteryType)){
-            colorBallNumMap.put("red", LotteryType.TWO_COLOR_BALL.getRedBallsNum());
-            colorBallNumMap.put("blue", LotteryType.TWO_COLOR_BALL.getBlueBallsNum());
+        }else if (TWO_COLOR_BALL.getType().equals(lotteryType)){
+            colorBallNumMap.put("red", TWO_COLOR_BALL.getRedBallsNum());
+            colorBallNumMap.put("blue", TWO_COLOR_BALL.getBlueBallsNum());
             colorBallNumMap.put("redBalls", LotteryUtils.TWO_COLOR_BALL_RED);
             colorBallNumMap.put("blueBalls", LotteryUtils.TWO_COLOR_BALL_BLUE);
         }else {
@@ -265,4 +312,5 @@ public class LottoService {
         //System.out.println("初始化时间" + (endTime - startTime) + "ms, 共" + map.keySet().size() + "个组合" + map.keySet());
         System.out.println("初始化时间" + (endTime - startTime) + "ms, 共" + combList.size() + "个组合\n" + String.join("\n", combList));
     }
+
 }

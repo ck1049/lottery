@@ -16,7 +16,7 @@ public class Lottery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String pkId;
     private String awardDate;//开奖日期
-    private String issueNumber;//期号
+    private Integer issueNumber;//期号
     private Long bonusPool; //奖池金额
     private Long totalBets; //总投注额
     private Integer price; //彩票价格
@@ -33,7 +33,7 @@ public class Lottery {
         this.sort = sort;
     }
 
-    public Lottery(String type, String issueNumber, String awardDate, Integer sort){
+    public Lottery(String type, Integer issueNumber, String awardDate, Integer sort){
         this.type = type;
         this.issueNumber = issueNumber;
         this.awardDate = awardDate;
