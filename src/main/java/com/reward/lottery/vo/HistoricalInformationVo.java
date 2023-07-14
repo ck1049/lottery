@@ -1,13 +1,17 @@
 package com.reward.lottery.vo;
 
+import com.reward.lottery.common.enumeration.Week;
 import com.reward.lottery.domain.HistoricalInformation;
+import com.reward.lottery.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 历史开奖信息响应类
@@ -33,8 +37,12 @@ public class HistoricalInformationVo {
         this.name = historicalInformation.getName();
         this.enName = historicalInformation.getEnName();
         this.issueNumber = historicalInformation.getIssueNumber();
-        this.awardDate = historicalInformation.getAwardDate();
-        this.week = historicalInformation.getWeek();
+        this.awardDate = DateUtils.format(DateUtils.parse(historicalInformation.getAwardDate(), "yyyy-MM-dd"), "MM.dd");
+        Date awardDate = DateUtils.parse(historicalInformation.getAwardDate(), "yyyy-MM-dd");
+
+        this.week = DateUtils.format(new Date(), "yyyy-MM-dd").equals(historicalInformation.getAwardDate())
+                ? "今天" : DateUtils.format(DateUtils.offsetDay(new Date(), -1), "yyyy-MM-dd").equals(historicalInformation.getAwardDate())
+                ? "昨天" : DateUtils.week(awardDate).getSimpleName();
         this.bonusPool = historicalInformation.getBonusPool();
         this.redBalls = historicalInformation.getRedBalls().split(",");
         this.blueBalls = historicalInformation.getBlueBalls().split(",");

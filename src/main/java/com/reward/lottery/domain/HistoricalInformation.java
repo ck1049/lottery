@@ -17,7 +17,7 @@ public class HistoricalInformation {
     private String enName;
     private Integer issueNumber;
     private String awardDate;
-    private String week;
+    private Integer week;
     private BigDecimal bonusPool;
     private String redBalls;
     private String blueBalls;
