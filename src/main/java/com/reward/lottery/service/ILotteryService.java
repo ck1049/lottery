@@ -1,5 +1,6 @@
 package com.reward.lottery.service;
 
+import com.reward.lottery.domain.LotteryTrend;
 import com.reward.lottery.vo.HistoricalInformationVo;
 import com.reward.lottery.vo.LotteryInformationVo;
 
@@ -21,4 +22,11 @@ public interface ILotteryService {
      * @return
      */
     List<HistoricalInformationVo> historicalInformation(String enName, String minIssueNumber, Integer pageSize);
+
+    /**
+     * 走势图
+     * @param enName
+     * @return
+     */
+    List<LotteryTrend> trend(String enName);
 }

@@ -3,9 +3,10 @@ package com.reward.lottery.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.reward.lottery.common.enumeration.LotteryType;
 import com.reward.lottery.domain.HistoricalInformation;
+import com.reward.lottery.domain.LotteryTrend;
+import com.reward.lottery.mapper.LotteryTrendDao;
 import com.reward.lottery.vo.LotteryResVo;
 import com.reward.lottery.domain.Lotto;
-import com.reward.lottery.domain.TwoColorBall;
 import com.reward.lottery.mapper.LotteryDao;
 import com.reward.lottery.mapper.LottoDao;
 import com.reward.lottery.mapper.TwoColorBallDao;
@@ -37,6 +38,9 @@ public class LotteryServiceImpl implements ILotteryService {
     private LottoDao lottoDao;
     @Resource
     private LotteryDao lotteryDao;
+
+    @Resource
+    private LotteryTrendDao lotteryTrendDao;
 
     public void save(){
         List<LotteryResVo> list = LotteryStatisticsUtils.historyList("dlt");
@@ -198,15 +202,48 @@ public class LotteryServiceImpl implements ILotteryService {
 
     @Override
     public List<HistoricalInformationVo> historicalInformation(String enName, String minIssueNumber, Integer pageSize) {
-        if (TWO_COLOR_BALL.getType().replace("_", "").equals(enName.toUpperCase())) {
+        if (TWO_COLOR_BALL.getType().equals(enName)) {
             List<HistoricalInformation> list = twoColorBallDao.historicalInformation(minIssueNumber, pageSize);
             return list.stream().map(HistoricalInformationVo::new).collect(Collectors.toList());
         }
-        if (LOTTO.getType().replace("_", "").equals(enName.toUpperCase())) {
+        if (LOTTO.getType().equals(enName)) {
             List<HistoricalInformation> list = lottoDao.historicalInformation(minIssueNumber, pageSize);
             return list.stream().map(HistoricalInformationVo::new).collect(Collectors.toList());
         }
         return new ArrayList<>();
+    }
+
+    @Override
+    public List<LotteryTrend> trend(String enName) {
+        int limit = 0;
+        if (TWO_COLOR_BALL.getType().equals(enName)) {
+            limit = (TWO_COLOR_BALL.getRedBallsNum() + TWO_COLOR_BALL.getBlueBallsNum()) * 50;
+        }
+        if (LOTTO.getType().equals(enName)) {
+            limit = (LOTTO.getRedBallsNum() + LOTTO.getBlueBallsNum()) * 50;
+        }
+        Example example = new Example(LotteryTrend.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("lotteryType", enName);
+        example.setOrderByClause("issue desc limit " + limit);
+        return lotteryTrendDao.selectByExample(example)
+                .stream().sorted((o1, o2) -> {
+                    // 期号正序，红球在前，号码正序
+                    if (o1.getIssue() < o2.getIssue()) {
+                        return -1;
+                    }
+                    if (o1.getIssue() > o2.getIssue()) {
+                        return 1;
+                    }
+                    if (o1.getColor().equals("red") && o2.getColor().equals("blue")) {
+                        return -1;
+                    }
+                    if (o1.getColor().equals("blue") && o2.getColor().equals("red")) {
+                        return 1;
+                    }
+                    return Integer.parseInt(o1.getNumber()) - Integer.parseInt(o2.getNumber());
+                })
+                .collect(Collectors.toList());
     }
 
     public List<Map<String, Long>> computeCombinationRanking(int periodsNum) {
