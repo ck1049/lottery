@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.reward.lottery.mapper.LotteryTrendDao">
-
+    <delete id="batchDelete">
+        delete from lottery_trend where id in <foreach collection="list" open="(" close=")" item="entity" separator=","> #{entity.id}</foreach>
+    </delete>
+    <update id="batchInsert">
+        insert into lottery_trend (id, lottery_type, issue, color, number, interval_count, hit) values
+        <foreach collection="list" separator="," item="item">(#{item.id},  #{item.lotteryType},  #{item.issue},  #{item.color},  #{item.number},  #{item.intervalCount},  #{item.hit})</foreach>
+    </update>
 </mapper>
