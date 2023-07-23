@@ -214,13 +214,12 @@ public class LotteryServiceImpl implements ILotteryService {
     }
 
     @Override
-    public List<LotteryTrend> trend(String enName) {
-        int limit = 0;
+    public List<LotteryTrend> trend(String enName, Integer limit) {
         if (TWO_COLOR_BALL.getType().equals(enName)) {
-            limit = (TWO_COLOR_BALL.getRedBallsNum() + TWO_COLOR_BALL.getBlueBallsNum()) * 50;
+            limit *= (TWO_COLOR_BALL.getRedBallsNum() + TWO_COLOR_BALL.getBlueBallsNum());
         }
         if (LOTTO.getType().equals(enName)) {
-            limit = (LOTTO.getRedBallsNum() + LOTTO.getBlueBallsNum()) * 50;
+            limit *= (LOTTO.getRedBallsNum() + LOTTO.getBlueBallsNum());
         }
         Example example = new Example(LotteryTrend.class);
         Example.Criteria criteria = example.createCriteria();

@@ -26,7 +26,8 @@ public interface ILotteryService {
     /**
      * 走势图
      * @param enName
+     * @param limit
      * @return
      */
-    List<LotteryTrend> trend(String enName);
+    List<LotteryTrend> trend(String enName, Integer limit);
 }

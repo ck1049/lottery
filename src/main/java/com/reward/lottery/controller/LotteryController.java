@@ -32,7 +32,9 @@ public class LotteryController {
     }
 
     @GetMapping("trend")
-    public ResponseEntity<List<LotteryTrend>> trend(@RequestParam(name = "enName") String enName) {
-        return ResponseEntity.ok(service.trend(enName));
+    public ResponseEntity<List<LotteryTrend>> trend(
+            @RequestParam(name = "enName") String enName,
+            @RequestParam(name = "limit", required = false, defaultValue = "50") Integer limit) {
+        return ResponseEntity.ok(service.trend(enName, limit));
     }
 }
