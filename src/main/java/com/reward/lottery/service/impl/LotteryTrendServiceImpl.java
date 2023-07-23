@@ -40,6 +40,7 @@ public class LotteryTrendServiceImpl implements ILotteryTrendService {
         if (issue == null) {
             return;
         }
+        limit *= (lotteryType.getRedBallsNum() + lotteryType.getBlueBallsNum());
         Example example = new Example(LotteryTrend.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("lotteryType", lotteryType.getType());

@@ -29,7 +29,7 @@ class LotteryApplicationTests {
 
     @Test
     void testupdateIntervalCount() {
-        int limit = 1000;
+        int limit = 20; // 期数
         int twoColorBallStartIssue = 23034;
         int lottoBallStartIssue = 23034;
         iLotteryTrendService.updateIntervalCount(LotteryType.TWO_COLOR_BALL, twoColorBallStartIssue, limit);
