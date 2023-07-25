@@ -2,9 +2,9 @@ package com.reward.lottery.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.reward.lottery.common.enumeration.LotteryType;
-import com.reward.lottery.domain.Lotto;
+import com.reward.lottery.model.Lotto;
 import com.reward.lottery.vo.LotteryResVo;
-import com.reward.lottery.mapper.LottoDao;
+import com.reward.lottery.mapper.LottoMapper;
 import com.reward.lottery.service.ILottoService;
 import com.reward.lottery.utils.DateUtils;
 import com.reward.lottery.utils.LotteryCombinationsUtils;
@@ -21,13 +21,13 @@ import java.util.stream.Collectors;
 public class LottoServiceImpl implements ILottoService {
 
     @Autowired
-    private LottoDao lottoDao;
+    private LottoMapper lottoMapper;
 
     @Override
     public void save(){
         List<LotteryResVo> list = LotteryStatisticsUtils.historyList("dlt");
         for (LotteryResVo lotteryResVo : list) {
-            lottoDao.insert(LotteryUtils.setAndReturnLotto(lotteryResVo));
+            lottoMapper.insert(LotteryUtils.setAndReturnLotto(lotteryResVo));
         }
     }
 
@@ -36,12 +36,11 @@ public class LottoServiceImpl implements ILottoService {
         Lotto lastLotto = getLastlotto();
         Example example = new Example(Lotto.class);
         example.createCriteria().andEqualTo("issueNumber", lastLotto.getIssueNumber());
-        Lotto lotto = lottoDao.selectOneByExample(example);
+        Lotto lotto = lottoMapper.selectOneByExample(example);
         if (lotto == null){
-            lottoDao.insert(lastLotto);//根据期号查询本地数据库，没有该条记录时进行插入
+            lottoMapper.insert(lastLotto);//根据期号查询本地数据库，没有该条记录时进行插入
         }else {
-            lastLotto.setPkId(lotto.getPkId());
-            lottoDao.updateByPrimaryKey(lastLotto);
+            lottoMapper.updateByPrimaryKey(lastLotto);
         }
     }
 
@@ -59,16 +58,16 @@ public class LottoServiceImpl implements ILottoService {
     }
 
     @Override
-    public List<Lotto> queryAll(Integer start, Integer pageSize){
+    public List<Lotto> queryAll(Integer pageNum, Integer pageSize){
         Example example = new Example(Lotto.class);
         example.orderBy("issueNumber").desc();
-        PageHelper.startPage(start, pageSize);
-        return lottoDao.selectByExample(example);
+        PageHelper.startPage(pageNum, pageSize);
+        return lottoMapper.selectByExample(example);
     }
 
     @Override
     public Lotto queryById(String id){
-        return lottoDao.selectByPrimaryKey(id);
+        return lottoMapper.selectByPrimaryKey(id);
     }
 
     /**
@@ -100,7 +99,7 @@ public class LottoServiceImpl implements ILottoService {
     public Lotto queryByIssueNumber(Integer issueNumber) {
         Example example = new Example(Lotto.class);
         example.createCriteria().andEqualTo("issueNumber", issueNumber);
-        return lottoDao.selectOneByExample(example);
+        return lottoMapper.selectOneByExample(example);
     }
 
 
@@ -108,7 +107,7 @@ public class LottoServiceImpl implements ILottoService {
     public Lotto queryByAwardDate(String date) {
         Example example = new Example(Lotto.class);
         example.createCriteria().andEqualTo("awardDate", DateUtils.formatDateString(date));
-        return lottoDao.selectOneByExample(example);
+        return lottoMapper.selectOneByExample(example);
     }
 
     /**
@@ -169,16 +168,12 @@ public class LottoServiceImpl implements ILottoService {
         Example example = new Example(Lotto.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("issueNumber", lotto.getIssueNumber());
-        lottoDao.deleteByExample(example);
-        lottoDao.insert(lotto);
-    }
-
-    public List<Map<String, Long>> computeCombinationRanking(int periodsNum) {
-        return null;
+        lottoMapper.deleteByExample(example);
+        lottoMapper.insert(lotto);
     }
 
     public void create(Lotto lotto){
-        lottoDao.insert(lotto);
+        lottoMapper.insert(lotto);
     }
 
     /**

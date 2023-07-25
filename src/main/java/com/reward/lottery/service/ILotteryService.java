@@ -1,6 +1,6 @@
 package com.reward.lottery.service;
 
-import com.reward.lottery.domain.LotteryTrend;
+import com.reward.lottery.model.LotteryTrend;
 import com.reward.lottery.vo.HistoricalInformationVo;
 import com.reward.lottery.vo.LotteryInformationVo;
 

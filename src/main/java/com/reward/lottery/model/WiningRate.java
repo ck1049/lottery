@@ -1,4 +1,4 @@
-package com.reward.lottery.domain;
+package com.reward.lottery.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

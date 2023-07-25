@@ -1,6 +1,6 @@
 package com.reward.lottery.service;
 
-import com.reward.lottery.domain.Lotto;
+import com.reward.lottery.model.Lotto;
 import java.util.List;
 
 public interface ILottoService {

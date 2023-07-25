@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.reward.lottery.mapper.LottoDao">
-    <select id="historicalInformation" resultType="com.reward.lottery.domain.HistoricalInformation">
+<mapper namespace="com.reward.lottery.mapper.LottoMapper">
+    <select id="historicalInformation" resultType="com.reward.lottery.model.HistoricalInformation">
         SELECT '超级大乐透' AS name, 'LOTTO' AS en_name, issue_number, award_date,
                ROUND(bonus_pool * POW(10, -8), 2) as bonus_pool,
                CONCAT(red1, ',', red2, ',', red3, ',', red4, ',', red5) AS red_balls, CONCAT(blue1, ',', blue2) AS blue_balls,

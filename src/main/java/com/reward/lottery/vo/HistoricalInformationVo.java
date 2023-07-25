@@ -1,7 +1,6 @@
 package com.reward.lottery.vo;
 
-import com.reward.lottery.common.enumeration.Week;
-import com.reward.lottery.domain.HistoricalInformation;
+import com.reward.lottery.model.HistoricalInformation;
 import com.reward.lottery.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +10,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 历史开奖信息响应类

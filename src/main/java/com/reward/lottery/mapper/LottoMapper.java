@@ -1,13 +1,13 @@
 package com.reward.lottery.mapper;
 
-import com.reward.lottery.domain.HistoricalInformation;
-import com.reward.lottery.domain.TwoColorBall;
+import com.reward.lottery.model.HistoricalInformation;
+import com.reward.lottery.model.Lotto;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
-public interface TwoColorBallDao extends Mapper<TwoColorBall> {
+public interface LottoMapper extends Mapper<Lotto> {
 
     /**
      * 历史开奖信息（小程序使用）

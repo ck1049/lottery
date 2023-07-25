@@ -1,4 +1,4 @@
-package com.reward.lottery.domain;
+package com.reward.lottery.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,20 +23,8 @@ public class TwoColorBall extends Lottery {
     private String red6;
     private String blue1;
 
-    public TwoColorBall(String number, String red1, String red2, String red3, String red4, String red5, String red6, String blue1, String type, Integer sort){
-        super(type, sort);
-        this.number = number;
-        this.red1 = red1;
-        this.red2 = red2;
-        this.red3 = red3;
-        this.red4 = red4;
-        this.red5 = red5;
-        this.red6 = red6;
-        this.blue1 = blue1;
-    }
-
-    public TwoColorBall(String number, String red1, String red2, String red3, String red4, String red5, String red6, String blue1, String type, Integer issueNumber, String awardDate, Integer sort){
-        super(type, issueNumber, awardDate, sort);
+    public TwoColorBall(String number, String red1, String red2, String red3, String red4, String red5, String red6, String blue1, Integer issueNumber, String awardDate){
+        super(issueNumber, awardDate);
         this.number = number;
         this.red1 = red1;
         this.red2 = red2;

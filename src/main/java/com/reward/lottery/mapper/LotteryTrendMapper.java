@@ -1,6 +1,6 @@
 package com.reward.lottery.mapper;
 
-import com.reward.lottery.domain.LotteryTrend;
+import com.reward.lottery.model.LotteryTrend;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
 
@@ -14,7 +14,7 @@ import java.util.List;
  * @author loafer
  * @since 2023-07-20
  */
-public interface LotteryTrendDao extends Mapper<LotteryTrend> {
+public interface LotteryTrendMapper extends Mapper<LotteryTrend> {
 
     void batchDelete(@Param("list") List<LotteryTrend> list);
     void batchInsert(@Param("list") List<LotteryTrend> list);

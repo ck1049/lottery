@@ -1,8 +1,8 @@
 package com.reward.lottery.service.impl;
 
 import com.reward.lottery.common.enumeration.LotteryType;
-import com.reward.lottery.domain.LotteryTrend;
-import com.reward.lottery.mapper.LotteryTrendDao;
+import com.reward.lottery.model.LotteryTrend;
+import com.reward.lottery.mapper.LotteryTrendMapper;
 import com.reward.lottery.service.ILotteryTrendService;
 import com.reward.lottery.utils.CollectionUtils;
 import com.reward.lottery.utils.StringUtils;
@@ -30,7 +30,7 @@ public class LotteryTrendServiceImpl implements ILotteryTrendService {
     private TransactionTemplate transactionTemplate;
 
     @Resource
-    private LotteryTrendDao dao;
+    private LotteryTrendMapper dao;
 
     /**
      * 递归调用更新方法，issue==null时全部更新完成

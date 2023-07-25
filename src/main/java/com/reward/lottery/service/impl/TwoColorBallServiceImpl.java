@@ -1,10 +1,10 @@
 package com.reward.lottery.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.reward.lottery.domain.Lotto;
+import com.reward.lottery.model.Lotto;
 import com.reward.lottery.vo.LotteryResVo;
-import com.reward.lottery.domain.TwoColorBall;
-import com.reward.lottery.mapper.TwoColorBallDao;
+import com.reward.lottery.model.TwoColorBall;
+import com.reward.lottery.mapper.TwoColorBallMapper;
 import com.reward.lottery.service.ITwoColorBallService;
 import com.reward.lottery.utils.DateUtils;
 import com.reward.lottery.utils.LotteryStatisticsUtils;
@@ -18,12 +18,12 @@ import java.util.List;
 public class TwoColorBallServiceImpl implements ITwoColorBallService {
 
     @Autowired
-    private TwoColorBallDao twoColorBallDao;
+    private TwoColorBallMapper twoColorBallMapper;
 
     public void save(){
         List<LotteryResVo> list = LotteryStatisticsUtils.historyList("ssq");
         for (LotteryResVo lotteryResVo : list) {
-            twoColorBallDao.insert(LotteryUtils.setAndReturnTwoColorBall(lotteryResVo));
+            twoColorBallMapper.insert(LotteryUtils.setAndReturnTwoColorBall(lotteryResVo));
         }
     }
 
@@ -32,23 +32,12 @@ public class TwoColorBallServiceImpl implements ITwoColorBallService {
         TwoColorBall lastTwoColorBall = getLastTwoColorBall();
         Example example = new Example(Lotto.class);
         example.createCriteria().andEqualTo("issueNumber", lastTwoColorBall.getIssueNumber());
-        TwoColorBall twoColorBall = twoColorBallDao.selectOneByExample(example);
+        TwoColorBall twoColorBall = twoColorBallMapper.selectOneByExample(example);
         if (twoColorBall == null){
-            twoColorBallDao.insert(lastTwoColorBall);//根据期号查询本地数据库，没有该条记录时进行插入
+            twoColorBallMapper.insert(lastTwoColorBall);//根据期号查询本地数据库，没有该条记录时进行插入
         }else {
-            lastTwoColorBall.setPkId(twoColorBall.getPkId());
+            twoColorBallMapper.updateByPrimaryKey(twoColorBall);
         }
-    }
-
-    public List<TwoColorBall> queryAll(Integer start){
-        Example example = new Example(TwoColorBall.class);
-        example.orderBy("issueNumber").desc();
-        PageHelper.startPage(start, 20);
-        return twoColorBallDao.selectByExample(example);
-    }
-
-    public TwoColorBall queryById(String id){
-        return twoColorBallDao.selectByPrimaryKey(id);
     }
 
     /**
@@ -61,18 +50,7 @@ public class TwoColorBallServiceImpl implements ITwoColorBallService {
     }
 
     public void create(TwoColorBall twoColorBall){
-        twoColorBallDao.insert(twoColorBall);
+        twoColorBallMapper.insert(twoColorBall);
     }
 
-    public TwoColorBall queryByIssueNumber(Integer issueNumber) {
-        Example example = new Example(TwoColorBall.class);
-        example.createCriteria().andEqualTo("issueNumber", issueNumber);
-        return twoColorBallDao.selectOneByExample(example);
-    }
-
-    public TwoColorBall queryByAwardDate(String date) {
-        Example example = new Example(TwoColorBall.class);
-        example.createCriteria().andEqualTo("awardDate", DateUtils.formatDateString(date));
-        return twoColorBallDao.selectOneByExample(example);
-    }
 }

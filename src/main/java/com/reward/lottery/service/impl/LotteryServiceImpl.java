@@ -2,14 +2,14 @@ package com.reward.lottery.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.reward.lottery.common.enumeration.LotteryType;
-import com.reward.lottery.domain.HistoricalInformation;
-import com.reward.lottery.domain.LotteryTrend;
-import com.reward.lottery.mapper.LotteryTrendDao;
+import com.reward.lottery.model.HistoricalInformation;
+import com.reward.lottery.model.LotteryTrend;
+import com.reward.lottery.mapper.LotteryTrendMapper;
 import com.reward.lottery.vo.LotteryResVo;
-import com.reward.lottery.domain.Lotto;
-import com.reward.lottery.mapper.LotteryDao;
-import com.reward.lottery.mapper.LottoDao;
-import com.reward.lottery.mapper.TwoColorBallDao;
+import com.reward.lottery.model.Lotto;
+import com.reward.lottery.mapper.LotteryMapper;
+import com.reward.lottery.mapper.LottoMapper;
+import com.reward.lottery.mapper.TwoColorBallMapper;
 import com.reward.lottery.service.ILotteryService;
 import com.reward.lottery.utils.DateUtils;
 import com.reward.lottery.utils.LotteryCombinationsUtils;
@@ -32,156 +32,22 @@ import static com.reward.lottery.common.enumeration.LotteryType.TWO_COLOR_BALL;
 public class LotteryServiceImpl implements ILotteryService {
 
     @Resource
-    private TwoColorBallDao twoColorBallDao;
+    private TwoColorBallMapper twoColorBallMapper;
 
     @Resource
-    private LottoDao lottoDao;
+    private LottoMapper lottoMapper;
     @Resource
-    private LotteryDao lotteryDao;
+    private LotteryMapper lotteryMapper;
 
     @Resource
-    private LotteryTrendDao lotteryTrendDao;
+    private LotteryTrendMapper lotteryTrendMapper;
 
     public void save(){
         List<LotteryResVo> list = LotteryStatisticsUtils.historyList("dlt");
         for (LotteryResVo lotteryResVo : list) {
-            lottoDao.insert(LotteryUtils.setAndReturnLotto(lotteryResVo));
+            lottoMapper.insert(LotteryUtils.setAndReturnLotto(lotteryResVo));
         }
     }
-
-    public void saveLast() {
-        Lotto lastLotto = getLastlotto();
-        Example example = new Example(Lotto.class);
-        example.createCriteria().andEqualTo("issueNumber", lastLotto.getIssueNumber());
-        Lotto lotto = lottoDao.selectOneByExample(example);
-        if (lotto == null){
-            lottoDao.insert(lastLotto);//根据期号查询本地数据库，没有该条记录时进行插入
-        }else {
-            lastLotto.setPkId(lotto.getPkId());
-            lottoDao.updateByPrimaryKey(lastLotto);
-        }
-    }
-
-    /**
-     * 根据期号保存大乐透开奖信息
-     * @param start
-     * @param end
-     */
-    public void saveByIssueNumbers(String start, String end) {
-        List<Lotto> lottoList = getByIssueNumbers(start, end);
-        for (Lotto lotto : lottoList) {
-            updateLottoByIssueNumber(lotto);
-        }
-    }
-
-    public List<Lotto> queryAll(Integer start, Integer pageSize){
-        Example example = new Example(Lotto.class);
-        example.orderBy("issueNumber").desc();
-        PageHelper.startPage(start, pageSize);
-        return lottoDao.selectByExample(example);
-    }
-
-    public Lotto queryById(String id){
-        return lottoDao.selectByPrimaryKey(id);
-    }
-
-    /**
-     * 获取最近一期大乐透
-     * @return
-     */
-    public Lotto getLastlotto(){
-        LotteryResVo lottoMap = LotteryStatisticsUtils.getLastLotteryInfo("dlt");
-        return LotteryUtils.setAndReturnLotto(lottoMap);
-    }
-
-    /**
-     * 根据期号范围查询大乐透开奖信息
-     * @param start
-     * @param end
-     * @return
-     */
-    public List<Lotto> getByIssueNumbers(String start, String end) {
-        List<LotteryResVo> lottoResList = LotteryStatisticsUtils.historyList("dlt", start, end);
-        if (!CollectionUtils.isEmpty(lottoResList)) {
-            return lottoResList.stream().map(LotteryUtils::setAndReturnLotto).collect(Collectors.toList());
-        }
-        return new ArrayList<>();
-    }
-
-    public void create(Lotto lotto){
-        lottoDao.insert(lotto);
-    }
-
-    public Lotto queryByIssueNumber(Integer issueNumber) {
-        Example example = new Example(Lotto.class);
-        example.createCriteria().andEqualTo("issueNumber", issueNumber);
-        return lottoDao.selectOneByExample(example);
-    }
-
-
-    public Lotto queryByAwardDate(String date) {
-        Example example = new Example(Lotto.class);
-        example.createCriteria().andEqualTo("awardDate", DateUtils.formatDateString(date));
-        return lottoDao.selectOneByExample(example);
-    }
-
-    /**
-     * 根据给出的大乐透号码计算成本
-     * @param redBalls 红球
-     * @param blueBalls 蓝球
-     * @param additionalMultiple 追加倍数
-     * @return
-     */
-    public Long costCalculationByNumber(String redBalls, String blueBalls, Integer additionalMultiple) {
-        return (2 + additionalMultiple) * getCombinationsByNumber(redBalls, blueBalls);
-    }
-
-    /**
-     * 根据给出的大乐透号码计算成本
-     * @param multipleType 复式类型 例：6,3 或 6，3 或 6+3
-     * @param additionalMultiple 追加倍数
-     * @return
-     */
-    public Long costCalculationByMultipleType(String multipleType, Integer additionalMultiple) {
-        return (2 + additionalMultiple) * getCombinationsByMultipleType(multipleType);
-    }
-
-    /**
-     * 根据给出的大乐透号码计算组合数
-     * @param redBalls 红球
-     * @param blueBalls 蓝球
-     * @return
-     */
-    public Long getCombinationsByNumber(String redBalls, String blueBalls) {
-        String[] readBallArray = redBalls.split("[,，\\s]");
-        String[] blueBallArray = blueBalls.split("[,，\\s]");
-        if (readBallArray.length < 5 || readBallArray.length > LotteryType.LOTTO.getRedBallsNum()
-                || blueBallArray.length < 2 || blueBallArray.length > LotteryType.LOTTO.getBlueBallsNum()) {
-            return 0L;
-        }
-        return LotteryCombinationsUtils.getCombinations(LotteryType.LOTTO.getType(), readBallArray.length, blueBallArray.length).longValue();
-    }
-
-    /**
-     * 根据复式类型计算组合数
-     * @param multipleType 复式类型 例：6,3 或 6，3 或 6+3
-     * @return
-     */
-    public Long getCombinationsByMultipleType(String multipleType) {
-        return LotteryCombinationsUtils.getCombinations(LotteryType.LOTTO.getType(), multipleType).longValue();
-    }
-
-    /**
-     * 根据期号查询或更新大乐透开奖数据
-     */
-    public void updateLottoByIssueNumber(Lotto lotto) {
-        Example example = new Example(Lotto.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("issueNumber", lotto.getIssueNumber());
-        lottoDao.deleteByExample(example);
-        lottoDao.insert(lotto);
-    }
-
 
     /**
      * 开奖信息
@@ -189,7 +55,7 @@ public class LotteryServiceImpl implements ILotteryService {
      */
     @Override
     public List<LotteryInformationVo> lotteryInformation() {
-        return lotteryDao.lotteryInformationList().stream().map(item -> {
+        return lotteryMapper.lotteryInformationList().stream().map(item -> {
             Date awardDate = DateUtils.parse(item.getAwardDate(), "yyyy-MM-dd");
             String week = DateUtils.format(new Date(), "yyyy-MM-dd").equals(item.getAwardDate())
                     ? "今天" : DateUtils.format(DateUtils.offsetDay(new Date(), -1), "yyyy-MM-dd").equals(item.getAwardDate())
@@ -203,11 +69,11 @@ public class LotteryServiceImpl implements ILotteryService {
     @Override
     public List<HistoricalInformationVo> historicalInformation(String enName, String minIssueNumber, Integer pageSize) {
         if (TWO_COLOR_BALL.getType().equals(enName)) {
-            List<HistoricalInformation> list = twoColorBallDao.historicalInformation(minIssueNumber, pageSize);
+            List<HistoricalInformation> list = twoColorBallMapper.historicalInformation(minIssueNumber, pageSize);
             return list.stream().map(HistoricalInformationVo::new).collect(Collectors.toList());
         }
         if (LOTTO.getType().equals(enName)) {
-            List<HistoricalInformation> list = lottoDao.historicalInformation(minIssueNumber, pageSize);
+            List<HistoricalInformation> list = lottoMapper.historicalInformation(minIssueNumber, pageSize);
             return list.stream().map(HistoricalInformationVo::new).collect(Collectors.toList());
         }
         return new ArrayList<>();
@@ -225,7 +91,7 @@ public class LotteryServiceImpl implements ILotteryService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("lotteryType", enName);
         example.setOrderByClause("issue desc limit " + limit);
-        return lotteryTrendDao.selectByExample(example)
+        return lotteryTrendMapper.selectByExample(example)
                 .stream().sorted((o1, o2) -> {
                     // 期号正序，红球在前，号码正序
                     if (o1.getIssue() < o2.getIssue()) {
@@ -243,10 +109,6 @@ public class LotteryServiceImpl implements ILotteryService {
                     return Integer.parseInt(o1.getNumber()) - Integer.parseInt(o2.getNumber());
                 })
                 .collect(Collectors.toList());
-    }
-
-    public List<Map<String, Long>> computeCombinationRanking(int periodsNum) {
-        return null;
     }
 
     /**

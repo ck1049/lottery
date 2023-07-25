@@ -1,11 +1,8 @@
-package com.reward.lottery.domain;
+package com.reward.lottery.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * 历史开奖信息响应类

@@ -71,10 +71,6 @@ public class LotteryStatisticsUtils {
         return list;
     }
 
-    public static LotteryResVo getLastLotteryInfo() {
-        return historyList().get(0);
-    }
-
     public static LotteryResVo getLastLotteryInfo(String type) {
         return historyList(type).get(0);
     }

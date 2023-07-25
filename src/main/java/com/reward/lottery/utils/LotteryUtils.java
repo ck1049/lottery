@@ -1,10 +1,10 @@
 package com.reward.lottery.utils;
 
 import com.reward.lottery.common.enumeration.LotteryType;
-import com.reward.lottery.domain.Lottery;
-import com.reward.lottery.domain.Lotto;
+import com.reward.lottery.model.Lottery;
+import com.reward.lottery.model.Lotto;
 import com.reward.lottery.vo.LotteryResVo;
-import com.reward.lottery.domain.TwoColorBall;
+import com.reward.lottery.model.TwoColorBall;
 import java.util.*;
 
 public class LotteryUtils {
@@ -95,23 +95,18 @@ public class LotteryUtils {
         String ball7 = number.substring(12);
         Lottery lottery;
         if ("lotto".equals(mold)){
-            lottery = new Lotto(number, ball1, ball2, ball3, ball4, ball5,ball6, ball7, "0", 0);
+            lottery = new Lotto(number, ball1, ball2, ball3, ball4, ball5,ball6, ball7, issueNumber, awardDate);
         }else if ("twoColorBall".equals(mold)){
-            lottery = new TwoColorBall(number, ball1, ball2, ball3, ball4, ball5,ball6, ball7, "0", 0);
+            lottery = new TwoColorBall(number, ball1, ball2, ball3, ball4, ball5,ball6, ball7, issueNumber, awardDate);
         }else {
             return null;
         }
-        lottery.setPkId(KeyUtils.uuid());
-        lottery.setAwardDate(awardDate);
-        lottery.setIssueNumber(issueNumber);
         lottery.setBonusPool(Long.parseLong(bonusPool));
         lottery.setTotalBets(Long.parseLong(totalBets));
-        lottery.setPrice(0);
         lottery.setFirstPrizeNumber(Integer.parseInt(firstPrizeNumber));
         lottery.setFirstPrizeAmount(Integer.parseInt(firstPrizeAmount));
         lottery.setSecondPrizeNumber(Integer.parseInt(secondPrizeNumber));
         lottery.setSecondPrizeAmount(Integer.parseInt(secondPrizeAmount));
-        lottery.setWinningAmount(0);
         return lottery;
     }
 
