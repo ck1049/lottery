@@ -1,0 +1,23 @@
+server:
+    port: 8090
+    servlet:
+        context-path: /lottery
+spring:
+    application:
+        name: lottery-service
+    mvc:
+        pathmatch:
+            matching-strategy: ant_path_matcher
+    profiles:
+        active: dev
+    thymeleaf:
+        cache: false
+mybatis:
+    configuration:
+        map-underscore-to-camel-case: true
+    mapper-locations: classpath:mapper/*.xml
+    type-aliases-package: com.reward.lottery.model
+pagehelper:
+    helper-dialect: mysql
+    reasonable: true
+    support-methods-arguments: true

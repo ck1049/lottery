@@ -4,15 +4,10 @@ import com.reward.lottery.common.enumeration.LotteryType;
 import com.reward.lottery.service.ILotteryTrendService;
 import com.reward.lottery.service.ILottoService;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.junit4.SpringRunner;
+import jakarta.annotation.Resource;
 
-import javax.annotation.Resource;
-
-@RunWith(SpringRunner.class)
 @SpringBootTest
 class LotteryApplicationTests {
 
