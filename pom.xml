@@ -11,11 +11,21 @@
     <packaging>jar</packaging>
 
     <properties>
-        <java.version>20</java.version>
+        <java.version>17</java.version>
         <spring.boot.version>3.1.2</spring.boot.version>
         <spring.cloud.version>2022.0.4</spring.cloud.version>
         <spring.cloud.alibaba.version>2022.0.0.0-RC2</spring.cloud.alibaba.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.1.2</version>
+    </parent>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -84,9 +94,9 @@
         </dependency>
 
         <dependency>
-            <groupId>cn.itlym.shoulder</groupId>
+            <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>0.1</version>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -150,10 +160,12 @@
     </dependencyManagement>
 
     <build>
+        <finalName>lottery</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
                 <configuration>
                     <excludes>
                         <exclude>
